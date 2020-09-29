@@ -30,9 +30,20 @@ app.get('/score', (req, res) => {
 });
 
 app.post('/score', (req, res) => {
-  axios.post('https://@ADW_APEX_HOSTNAME@/ords/@APEX@/score_table/', req.body, { auth: { username: '@APEX_USER@', password: '@APEX_PASSWORD@' }})
+  axios.post('https://@ADW_APEX_HOSTNAME@/ords/@APEX@/score_table/', req.body, { auth: { username: '@APEX_USER@', password: '@APEX_PASSWORD@' }});
   .then(adwres => {
     res.send(adwres.data);
+  })
+  .catch(err => {
+    console.log(err);
+    res.send('{ "response" : "bad" }');
+  });
+});
+
+app.post('/event', (req, res) => {
+  axios.post('http://fnserver:8080/invoke/@EVENT_FN_ID@', req.body, {headers: { 'Content-Type': 'application/json'}})
+  .then(fnres => {
+    res.send(fnres.data);
   })
   .catch(err => {
     console.log(err);

@@ -416,7 +416,7 @@ var getHighScore = function() {
     if (highScore !== null) {
         return highScore;
     } else {
-        axios.get(BASE_URL)
+        axios.get(SCORE_BASE_URL)
         .then(scoreres => {
             if (scoreres.data.items.length > 0) {
                 console.log(scoreres.data.items[0].score);
@@ -10386,7 +10386,7 @@ var scoreBoardState = (function() {
         init: function() {
             menu.enable();
             gameTitleState.init();
-	    axios.get(BASE_URL)
+	    axios.get(SCORE_BASE_URL)
               .then(scoreres => {
                 console.log(scoreres);
                 score_list = scoreres.data.items;
@@ -11258,14 +11258,15 @@ var finishState = (function(){
 // Game Over state
 // (state when player has lost last life)
 
-const BASE_URL = 'http://'+window.location.hostname+':8081/score';
+const SCORE_BASE_URL = 'http://'+window.location.hostname+':8081/score';
 
 var overState = (function() {
     var frames;
     return {
         init: function() {
             frames = 0;
-	    axios.post(BASE_URL,{ "game_id": 1, "user_id": window.name, "score": getScore() })
+            addEvent({});
+	    axios.post(SCORE_BASE_URL,{ "game_id": 1, "user_id": window.name, "score": getScore() })
               .then(scoreres => {
                 console.log(scoreres);
               })
@@ -11287,6 +11288,12 @@ var overState = (function() {
         },
     };
 })();
+
+const EVENT_BASE_URL = 'http://'+window.location.hostname+':8081/event';
+
+async function addEvent(input) {
+   return await axios.post(EVENT_BASE_URL,input);
+}
 
 //@line 1 "src/input.js"
 //////////////////////////////////////////////////////////////////////////////////////
