@@ -1,0 +1,12 @@
+{
+	"name": "addevent",
+        "version": "0.0.1",
+	"description": "event feed function",
+	"main": "func.js",
+	"author": "",
+	"license": "Apache-2.0",
+	"dependencies": {
+		"@fnproject/fdk": ">=0.0.18",
+		"axios": "^0.20.0"
+	}
+}

@@ -1,0 +1,68 @@
+<html>
+    <style>
+        body {
+            margin:0;
+            background: #000;
+            font-family: 'ArcadeR';
+        }
+        @font-face {
+            font-family: 'ArcadeR';
+            src: url('font/ARCADE_R.TTF');
+            /*
+            src: url('font/PressStart2P.ttf');
+            */
+        }
+        #canvas-warning {
+            color: #FF0;
+            font-size: 1.5em;
+        }
+    </style>
+
+    <script>
+
+        function checkName() {
+            if (window.name != null | window.name.length > 0) {
+                document.getElementById("user").value = window.name;
+            }
+        }
+
+        function enter(e) {
+            if (event.which == 13 || event.keyCode == 13) {
+                play();
+            } else {
+                var user = document.getElementById("user").value;
+                user = user.toUpperCase();
+                console.log(user.length)
+                console.log(user)
+                document.getElementById("user").value = user.substring(0,3);
+            }
+        }
+
+        function play() {
+            var user = document.getElementById("user").value;
+            if (user == '') {
+                alert('You need to provide a name.');
+                return;
+            }
+            window.name = user;
+            console.log(user.length)
+            console.log(user)
+            window.location.href = "start.htm";
+        }
+
+    </script>
+
+    <body" style="padding: 8px;" bgcolor="black" onload="checkName()">
+        <div style="width: 500px; height: 152px; border: 4px solid #FFF; border-radius: 8px; margin-left: auto; margin-right: auto;">
+        <center>
+            <h3 style="color:white;">OCI Arcade - Welcome \o/</h3>
+        </center>
+        <center>
+            <h3 style="color:white;">Enter your Name:</h3>
+            <input style="font-size: 16px; font-family: ArcadeR; background-color:black; color:white;" maxlength="3" size="3" type="text" id="user" value="" onkeyup="enter(event)" />
+            <input type="button" style="border-radius: 4px; background-color: #FFF; color: #000; font-size: 16px; font-family: ArcadeR;" value="Play" onclick="play()" />
+        </center>
+        </div>
+    </body>
+
+</html>

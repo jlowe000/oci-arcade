@@ -1,0 +1,5 @@
+schema_version: 20180708
+name: addevent
+version: 0.0.12
+runtime: node
+entrypoint: node func.js
