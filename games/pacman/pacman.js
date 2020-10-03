@@ -390,7 +390,7 @@ var addScore = function(p) {
 
     // handle extra life at 10000 points
     if (score < 10000 && score+p >= 10000) {
-        addEvent({ "game_id": 1, "instance_id": instance_id, "user_id": window.name, "score": getScore(), "level": level, "x": pacman.tile.x, "y": pacman.tile.y, "state" : "EXTRA_LIFE" });
+        addEvent({ "game_id": 1+gameMode, "instance_id": instance_id, "user_id": window.name, "score": getScore(), "level": level, "x": pacman.tile.x, "y": pacman.tile.y, "state" : "EXTRA_LIFE" });
         extraLives++;
         renderer.drawMap();
     }
@@ -8989,7 +8989,7 @@ var energizer = (function() {
         save: save,
         load: load,
         reset: function() {
-            addEvent({ "game_id": 1, "instance_id": instance_id, "user_id": window.name, "score": getScore(), "level": level, "x": pacman.tile.x, "y": pacman.tile.y, "state" : "POWER_DOWN" });
+            addEvent({ "game_id": 1+gameMode, "instance_id": instance_id, "user_id": window.name, "score": getScore(), "level": level, "x": pacman.tile.x, "y": pacman.tile.y, "state" : "POWER_DOWN" });
             audio.ghostTurnToBlue.stopLoop();
             count = 0;
             active = false;
@@ -9008,7 +9008,7 @@ var energizer = (function() {
             }
         },
         activate: function() { 
-            addEvent({ "game_id": 1, "instance_id": instance_id, "user_id": window.name, "score": getScore(), "level": level, "x": pacman.tile.x, "y": pacman.tile.y, "state" : "POWER_UP" });
+            addEvent({ "game_id": 1+gameMode, "instance_id": instance_id, "user_id": window.name, "score": getScore(), "level": level, "x": pacman.tile.x, "y": pacman.tile.y, "state" : "POWER_UP" });
             audio.ghostNormalMove.stopLoop();
             audio.ghostTurnToBlue.startLoop();
             active = true;
@@ -9092,7 +9092,7 @@ BaseFruit.prototype = {
     },
     testCollide: function() {
         if (this.isPresent() && this.isCollide()) {
-            addEvent({ "game_id": 1, "instance_id": instance_id, "user_id": window.name, "score": getScore(), "level": level, "x": pacman.tile.x, "y": pacman.tile.y, "state" : "FRUIT_EATEN" });
+            addEvent({ "game_id": 1+gameMode, "instance_id": instance_id, "user_id": window.name, "score": getScore(), "level": level, "x": pacman.tile.x, "y": pacman.tile.y, "state" : "FRUIT_EATEN" });
             addScore(this.getPoints());
             audio.silence(true);
             audio.eatingFruit.play();
@@ -10817,7 +10817,7 @@ var newGameState = (function() {
             highScore = null;
             setFruitFromGameMode();
             instance_id = window.name + ":" + Date.now();
-            addEvent({ "game_id": 1, "instance_id": instance_id, "user_id": window.name, "state" : "NEW_GAME" });
+            addEvent({ "game_id": 1+gameMode, "instance_id": instance_id, "user_id": window.name, "state" : "NEW_GAME" });
             readyNewState.init();
         },
         setStartLevel: function(i) {
@@ -10909,7 +10909,7 @@ var readyNewState = newChildObject(readyState, {
         elroyTimer.onNewLevel();
 
         // inherit attributes from readyState
-        addEvent({ "game_id": 1, "instance_id": instance_id, "user_id": window.name, "score": getScore(), "level": level, "state" : "NEW_LEVEL" });
+        addEvent({ "game_id": 1+gameMode, "instance_id": instance_id, "user_id": window.name, "score": getScore(), "level": level, "state" : "NEW_LEVEL" });
         readyState.init.call(this);
     },
 });
@@ -10963,7 +10963,7 @@ var playState = {
                 if (g.scared) { // eat ghost
                     energizer.addPoints();
                     g.onEaten();
-                    addEvent({ "game_id": 1, "instance_id": instance_id, "user_id": window.name, "score": getScore(), "level": level, "x": pacman.tile.x, "y": pacman.tile.y, "state" : "GHOST_EATEN" });
+                    addEvent({ "game_id": 1+gameMode, "instance_id": instance_id, "user_id": window.name, "score": getScore(), "level": level, "x": pacman.tile.x, "y": pacman.tile.y, "state" : "GHOST_EATEN" });
                 }
                 else if (pacman.invincible) // pass through ghost
                     continue;
@@ -11202,7 +11202,7 @@ var deadState = (function() {
                     renderer.endMapClip();
                 },
                 init: function() { // leave
-                    addEvent({ "game_id": 1, "instance_id": instance_id, "user_id": window.name, "score": getScore(), "level": level, "x": pacman.tile.x, "y": pacman.tile.y, "state" : "DIED" });
+                    addEvent({ "game_id": 1+gameMode, "instance_id": instance_id, "user_id": window.name, "score": getScore(), "level": level, "x": pacman.tile.x, "y": pacman.tile.y, "state" : "DIED" });
                     switchState( extraLives == 0 ? overState : readyRestartState);
                 }
             },
@@ -11276,8 +11276,8 @@ var overState = (function() {
     return {
         init: function() {
             frames = 0;
-            addEvent({ "game_id": 1, "instance_id": instance_id, "user_id": window.name, "score": getScore(), "level": level, "state" : "GAME_OVER" });
-	    axios.post(SCORE_BASE_URL,{ "game_id": 1, "user_id": window.name, "score": getScore() })
+            addEvent({ "game_id": 1+gameMode, "instance_id": instance_id, "user_id": window.name, "score": getScore(), "level": level, "state" : "GAME_OVER" });
+	    axios.post(SCORE_BASE_URL,{ "game_id": 1+gameMode, "user_id": window.name, "score": getScore() })
               .then(scoreres => {
                 console.log(scoreres);
               })
@@ -11303,7 +11303,9 @@ var overState = (function() {
 const EVENT_BASE_URL = 'http://'+window.location.hostname+':8081/event';
 
 async function addEvent(input) {
-   return await axios.post(EVENT_BASE_URL,input);
+   if (practiceMode == false) {
+       return await axios.post(EVENT_BASE_URL,input);
+   }
 }
 
 //@line 1 "src/input.js"
