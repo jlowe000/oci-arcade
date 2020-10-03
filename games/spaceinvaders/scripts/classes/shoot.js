@@ -57,7 +57,7 @@ var Shoot = DrawableElement.extend({
 			
 		function checkCollision(arr){
 			if (!arr){
-				return false;
+				return null;
 			}
 			
 			var cb = arr;
@@ -73,17 +73,22 @@ var Shoot = DrawableElement.extend({
 				
 				if (sX >= cbL && sX <= cbR && sY >= cbT && sY <= cbD && !cbO.destroyed){
 					arr[i].collided();
-					return true;
+					return i;
 				}
 			}	
 			
-			return false;
+			return null;
 		}
 		
 		if (checkCollision(this.collateBricks)) return true;
-		if (this.collateAliens && checkCollision(this.collateAliens)) {
-                        this.onAlienHit();
-			return true;
+		if (this.collateAliens) {
+			a = checkCollision(this.collateAliens);
+                        if (a != null) {
+                        	this.onAlienHit(this.collateAliens[a]);
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 });
