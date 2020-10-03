@@ -134,7 +134,9 @@ var Ship = DrawableElement.extend({
 				}
 			},
 			onAlienHit: function(s){
-				self.score = self.score + 10;
+				alienscore = s.getScore();
+                                // console.log('alien hit = '+alienscore);
+				self.score = self.score + alienscore;
                                 console.log('score = '+self.score);
 			},
 			collateBricks: this.shield.bricks,

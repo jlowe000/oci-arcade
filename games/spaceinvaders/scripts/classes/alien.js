@@ -16,6 +16,7 @@ var Alien = DrawableElement.extend({
 		
 		this.destroyed = false;
 		this.shoots = [];
+		this.score = options.score || 0;
 	},
 	build: function(){
 		
@@ -79,5 +80,8 @@ var Alien = DrawableElement.extend({
 	},
 	destroy: function(){
 		this._super();
+	},
+	getScore: function(){
+		return this.score;
 	}
 });
