@@ -12,6 +12,16 @@ var Game = Class.extend({
     this.loopInterval = 10;
     this.currentDir = [];
 
+    this.startx = 0;
+    this.starty = 0;
+    this.endx = 0;
+    this.endy = 0;
+    this.dx = 0;
+    this.dy = 0;
+    this.currdir = 0;
+    this.listener = 'None';
+    this.touchlength = 0;
+
     this.shield = {};
     this.shieldshape = '';
     this.ship = {};
@@ -92,13 +102,13 @@ var Game = Class.extend({
         this.isOnGame = true;
     } else {
         console.log('game score = '+this.ship.getScore());
-        axios.post(SCORE_BASE_URL,{ "game_id": 5, "user_id": window.name, "score": this.ship.getScore() })
-        .then(scoreres => {
-          console.log(scoreres);
-        })
-        .catch(err => {
-          console.log(err);
-        })
+        //axios.post(SCORE_BASE_URL,{ "game_id": 5, "user_id": window.name, "score": this.ship.getScore() })
+        //.then(scoreres => {
+        //  console.log(scoreres);
+        //})
+        //.catch(err => {
+        //  console.log(err);
+        //})
         self.destroy();
         console.log('Reset');
         this.build();
@@ -182,6 +192,12 @@ var Game = Class.extend({
     this.ctx.textAlign = "right";
     this.ctx.fillText("1UP "+window.name, 7*16, 16);
     this.ctx.fillText(this.ship.getScore(), 7*16, 32);
+    this.ctx.fillText('['+Math.round(this.startx)+','+Math.round(this.starty)+']', 18*16, 32);
+    this.ctx.textAlign = "left";
+    this.ctx.fillText('['+Math.round(this.endx)+','+Math.round(this.endy)+']', 24*16, 32);
+    this.ctx.fillText('['+this.currdir+']', 18*16, 48);
+    this.ctx.fillText('['+this.touchlength+']', 24*16, 48);
+    this.ctx.fillText('['+this.listener+']', 32*16, 48);
 
     this.shield.draw();
     this.ship.draw();
@@ -197,6 +213,11 @@ var Game = Class.extend({
   bindControls : function(params) {
     var self = this;
     var gameKeys = [Keyboard.Space, Keyboard.Left, Keyboard.Right];
+    var r = 1;
+    // var dx = 0;
+    // var dy = 0;
+    // var x = 0;
+    // var y = 0;
 
     function getAction(code) {
       switch (code) {
@@ -211,6 +232,60 @@ var Game = Class.extend({
       return null;
     }
     
+    document.addEventListener('touchstart', function(event) {
+      event.preventDefault();
+      self.listener = 'touchstart';
+      if(self.isOnGame) {
+        // commit new anchor
+        self.startx = event.targetTouches[0].screenX;
+        self.starty = event.targetTouches[0].screenY;
+        self.touchlength = event.touches.length;
+        self.currdir = Controls.Shoot;
+        self.currentDir[0] = self.currdir;
+      }
+    });
+
+    document.addEventListener('touchmove', function(event) {
+      event.preventDefault();
+      self.listener = 'touchmove';
+      if(self.isOnGame) {
+        self.endx = event.touches[0].screenX;
+        self.endy = event.touches[0].screenY;
+        self.dx = self.endx - self.startx;
+        self.dy = self.endy - self.starty;
+        if (Math.abs(self.dx) > 4) {
+          self.currdir = (self.dx>0 ? Controls.Right: Controls.Left);
+        }
+        self.currentDir[0] = self.currdir;
+        // register direction
+        // if (Math.abs(dx) >= Math.abs(dy)) {
+        //   pacman.setInputDir(dx>0 ? DIR_RIGHT : DIR_LEFT);
+        // }
+        // else {
+        //   pacman.setInputDir(dy>0 ? DIR_DOWN : DIR_UP);
+        // }
+        // event.stopPropagation();
+        // event.preventDefault();
+        self.touchlength = event.touches.length;
+      }
+    });
+
+    document.addEventListener('touchend', function(event) {
+      event.preventDefault();
+      self.listener = 'touchend';
+      // get current distance from anchor
+      if(self.isOnGame) {
+
+        // if(self.currentDir.indexOf(dir) === -1)
+        self.currentDir = [];
+
+        // var dir = self.currdir;
+        // var pos = self.currentDir.indexOf(dir);
+        // if(pos > -1)
+        //   self.currentDir.splice(pos, 1);
+      }
+    });
+
     document.addEventListener('keydown', function(event) {
       if(self.isOnGame) {
         var key = event.keyCode;
@@ -238,6 +313,7 @@ var Game = Class.extend({
           self.currentDir.splice(pos, 1);
       }
     });
+
   },
   unbindControls : function(params) {
     document.removeEventListener('keydown', function() {});
