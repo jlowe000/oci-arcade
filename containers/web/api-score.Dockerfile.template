@@ -24,6 +24,10 @@ RUN npm install
 
 # Bundle app source
 # COPY . .
+ENV ORDS_HOSTNAME=
+ENV APEX_WORKSPACE=
+ENV API_USER=
+ENV API_PASSWORD=
 
 EXPOSE 8081
 CMD [ "node", "server.js" ]

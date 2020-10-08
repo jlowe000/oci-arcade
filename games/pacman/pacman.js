@@ -417,7 +417,7 @@ var getHighScore = function() {
     if (highScore !== null) {
         return highScore;
     } else {
-        axios.get(SCORE_BASE_URL)
+        axios.get(SCORE_BASE_URL+'?game_id=1')
         .then(scoreres => {
             if (scoreres.data.items.length > 0) {
                 console.log(scoreres.data.items[0].score);
@@ -10390,7 +10390,7 @@ var scoreBoardState = (function() {
         init: function() {
             menu.enable();
             gameTitleState.init();
-	    axios.get(SCORE_BASE_URL)
+	    axios.get(SCORE_BASE_URL+'?game_id=1')
               .then(scoreres => {
                 console.log(scoreres);
                 score_list = scoreres.data.items;

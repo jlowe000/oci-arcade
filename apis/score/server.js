@@ -8,6 +8,11 @@ const express = require('express');
 const PORT = 8081;
 const HOST = '0.0.0.0';
 
+const ORDS_HOSTNAME = process.env.ORDS_HOSTNAME;
+const APEX_WORKSPACE = process.env.APEX_WORKSPACE;
+const API_USER = process.env.API_USER;
+const API_PASSWORD = process.env.API_PASSWORD;
+
 // App
 const app = express();
 
@@ -19,7 +24,8 @@ app.get('/', (req, res) => {
 });
 
 app.get('/score', (req, res) => {
-  axios.get('https://@ADW_APEX_HOSTNAME@/ords/@APEX@/score_table/?q={"game_id":"1","score":{"$notnull": null},"$orderby":{"score":"desc"}}', { auth: { username: '@APEX_USER@', password: '@APEX_PASSWORD@' }})
+  let game_id = req.query.game_id;
+  axios.get('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/score_table/?q={"game_id":'+game_id+',"score":{"$notnull": null},"$orderby":{"score":"desc"}}', { auth: { username: API_USER, password: API_PASSWORD  }})
   .then(adwres => {
     res.send(adwres.data);
   })
@@ -30,7 +36,7 @@ app.get('/score', (req, res) => {
 });
 
 app.post('/score', (req, res) => {
-  axios.post('https://@ADW_APEX_HOSTNAME@/ords/@APEX@/score_table/', req.body, { auth: { username: '@APEX_USER@', password: '@APEX_PASSWORD@' }});
+  axios.post('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/score_table/', req.body,{ auth: { username: API_USER, password: API_PASSWORD  }})
   .then(adwres => {
     res.send(adwres.data);
   })
