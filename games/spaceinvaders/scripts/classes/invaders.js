@@ -6,7 +6,7 @@ const SCORE_BASE_URL = 'http://'+window.location.hostname+':8081/score';
 
 var Game = Class.extend({
   init : function(options) {
-    this.canvas = null;
+    this.canvas = options.canvas || this.initCanvas(options.canvasId);
     this.ctx = null;
 
     this.loopInterval = 10;
@@ -31,10 +31,11 @@ var Game = Class.extend({
     
     this.onLose = options.onLose || function(){};
     this.onWin = options.onWin || function(){};
+    this.onExit = options.onExit || function(){};
 
     this.isOnGame = false;
 
-    this.boundGameRun = this.gameRun.bind(this);
+    // this.boundGameRun = this.gameRun.bind(this);
 
     /* FPS Info */
     this.fps = 0
@@ -51,12 +52,19 @@ var Game = Class.extend({
   },
   initCanvas : function(canvasId) {
     this.canvas = document.getElementById(canvasId || 'canvas');
+    // this.canvas.hidden = true;
     this.ctx = this.canvas.getContext('2d');
-    window.particles.init(this.ctx, { w: this.canvas.width, h: this.canvas.height });
+    // this.ctx.scale(0.75,0.75);
+    // window.particles.init(this.ctx, { x1: mapMargin, y1: mapHeight, x2: mapWidth, y2: mapHeight });
   },
   start : function() {
-    this.build();
-    this.gameRun();
+    // this.canvas.hidden = false;
+    this.isOnGame = true;
+    // this.gameRun();
+  },
+  end : function() {
+    // this.canvas.hidden = true;
+    this.isOnGame = false;
   },
   resetLevel : function() {
     var self = this;
@@ -83,7 +91,7 @@ var Game = Class.extend({
       }
     });
 
-    window.particles.init(this.ctx, { w: this.canvas.width, h: this.canvas.height });
+    // window.particles.init(this.ctx, { x1: mapMargin, y1: mapHeight, x2: mapWidth, y2: mapHeight });
     this.ship.invasion = this.invasion;
     this.currentDir = [];
     this.isOnGame = true;
@@ -98,10 +106,11 @@ var Game = Class.extend({
         console.log('lives = '+self.lives);
         this.invasion.clearShoot();
         this.ship.clearShoot();
-        window.particles.init(this.ctx, { w: this.canvas.width, h: this.canvas.height });
+        // window.particles.init(this.ctx, { x1: mapMargin, y1: mapHeight, x2: mapWidth, y2: mapHeight });
         this.isOnGame = true;
     } else {
-        console.log('game score = '+this.ship.getScore());
+        this.isOnGame = false;
+        // console.log('game score = '+this.ship.getScore());
         //axios.post(SCORE_BASE_URL,{ "game_id": 5, "user_id": window.name, "score": this.ship.getScore() })
         //.then(scoreres => {
         //  console.log(scoreres);
@@ -109,21 +118,25 @@ var Game = Class.extend({
         //.catch(err => {
         //  console.log(err);
         //})
-        self.destroy();
+        // self.destroy();
         console.log('Reset');
-        this.build();
-        window.particles.init(this.ctx, { w: this.canvas.width, h: this.canvas.height });
+        self.onExit();
+        // this.build();
+        // window.particles.init(this.ctx, { x1: mapMargin, y1: mapHeight, x2: mapWidth, y2: mapHeight });
     }
     this.gameRun();
   },
+  isGameOn: function() {
+    return this.isOnGame;
+  },
   gameRun: function(){
-    if (window.gameTime.tick()) { this.loop(); }
-    this.tLoop = window.requestAnimationFrame(this.boundGameRun);
+    // if (window.gameTime.tick()) { this.loop(); }
+    // this.tLoop = window.requestAnimationFrame(this.boundGameRun);
   },
   build : function() {
     var self = this;
 
-    self.lives = 3;
+    self.lives = 2;
 
     this.shield = new Shield({
       ctx : this.ctx,
@@ -134,7 +147,7 @@ var Game = Class.extend({
       shape : this.shieldshape
     });
 
-    var cnvW = this.canvas.width;
+    var cnvW = mapWidth; // this.canvas.width;
 
     this.ship = new Ship({
       ctx : this.ctx,
@@ -174,41 +187,46 @@ var Game = Class.extend({
   loop : function() {
     if (this.isOnGame){
       this.update(window.gameTime.frameTime);
-      this.draw();
     }
+    this.draw();
   },
   update : function(dt) {
-    this.shield.update(dt);
-    this.ship.update(this.currentDir, dt);
-    this.invasion.update(dt);
-    window.particles.update(dt);
+    if (this.isOnGame){
+        // console.log('frame:'+dt);
+        this.shield.update(dt);
+        this.ship.update(this.currentDir, dt);
+        this.invasion.update(dt);
+        // window.particles.update(dt);
+    }
   },
   draw : function() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+//    if (this.isGameOn) {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    this.ctx.font = "16px ArcadeR";
-    this.ctx.textBaseline = "top";
-    this.ctx.fillStyle = "#FFF";
-    this.ctx.textAlign = "right";
-    this.ctx.fillText("1UP "+window.name, 7*16, 16);
-    this.ctx.fillText(this.ship.getScore(), 7*16, 32);
-    this.ctx.fillText('['+Math.round(this.startx)+','+Math.round(this.starty)+']', 18*16, 32);
-    this.ctx.textAlign = "left";
-    this.ctx.fillText('['+Math.round(this.endx)+','+Math.round(this.endy)+']', 24*16, 32);
-    this.ctx.fillText('['+this.currdir+']', 18*16, 48);
-    this.ctx.fillText('['+this.touchlength+']', 24*16, 48);
-    this.ctx.fillText('['+this.listener+']', 32*16, 48);
+        this.ctx.font = "16px ArcadeR";
+        this.ctx.textBaseline = "top";
+        this.ctx.fillStyle = "#FFF";
+        this.ctx.textAlign = "right";
+        this.ctx.fillText("1UP "+window.name, 7*16, 16);
+        this.ctx.fillText(this.ship.getScore(), 7*16, 32);
+        this.ctx.fillText('['+Math.round(this.startx)+','+Math.round(this.starty)+']', 18*16, 32);
+        this.ctx.textAlign = "left";
+        this.ctx.fillText('['+Math.round(this.endx)+','+Math.round(this.endy)+']', 24*16, 32);
+        this.ctx.fillText('['+this.currdir+']', 18*16, 48);
+        this.ctx.fillText('['+this.touchlength+']', 24*16, 48);
+        this.ctx.fillText('['+this.listener+']', 32*16, 48);
 
-    this.shield.draw();
-    this.ship.draw();
-    this.invasion.draw();
-    window.particles.draw();
+        this.shield.draw();
+        this.ship.draw();
+        this.invasion.draw();
+        // window.particles.draw();
 
-    /* FPS Info */
-    var thisFrameFPS = 1000 / ((this.now = new Date) - this.lastUpdate);
-    this.fps += (thisFrameFPS - this.fps) / this.fpsFilter;
-    this.lastUpdate = this.now;
-    /* End FPS Info */
+        /* FPS Info */
+        var thisFrameFPS = 1000 / ((this.now = new Date) - this.lastUpdate);
+        this.fps += (thisFrameFPS - this.fps) / this.fpsFilter;
+        this.lastUpdate = this.now;
+        /* End FPS Info */
+//    }
   },
   bindControls : function(params) {
     var self = this;
@@ -338,15 +356,15 @@ var Game = Class.extend({
   drawSplash : function(callback) {
     var ctx = this.ctx,
       cellSize = 1,
-      cols = this.canvas.height/cellSize,
-      colsL = this.canvas.width/cellSize,
+      cols = mapHeight/cellSize,
+      colsL = mapWidth/cellSize,
       colIdx = 0;
       
     function drawColumn(idx, color){
       for(j=0; j< colsL; j++){
         ctx.save();
         ctx.fillStyle = color;  
-        ctx.fillRect(idx*(cellSize+20),j*cellSize , cellSize+20, cellSize); 
+        ctx.fillRect(mapMargin+mapPad+idx*(cellSize+20),mapMargin+mapPad+j*cellSize , cellSize+20, cellSize); 
         ctx.restore();
       }
     }

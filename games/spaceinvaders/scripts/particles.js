@@ -43,7 +43,7 @@ window.particles = (function(){
         p.pos[0] += p.vel[0] * dt;
         p.pos[1] += p.vel[1] * dt;
 
-        if (p.pos[1] > size.h){
+        if (p.pos[1] > size.y2 || p.pos[1] < size.y1 || p.pos[0] > size.x2 || p.pos[0] < size.x1){
           pars.splice(i, 1);
         }
       }

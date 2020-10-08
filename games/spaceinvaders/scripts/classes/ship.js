@@ -164,6 +164,7 @@ var Ship = DrawableElement.extend({
 		this.shootImage = ImageCreator.getImages(opts)[0];
 	},
 	getScore: function(){
-		return this.score;
+                var self = this;
+		return self.score;
 	}
 });

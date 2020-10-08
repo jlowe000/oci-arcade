@@ -25,11 +25,12 @@ var Alien = DrawableElement.extend({
 		this.hasCollision();
 		
 		var sX = this.position.x;
-		if (sX < 20 || sX > (590 - this.size.width))
+		if (sX < this.size.width || sX > mapWidth-20-this.size.width)
 			this.onWallCollision();
 			
-		var sY = this.position.y + this.size.height;
-		if (sY < 0) this.ship.collided();
+		var sY = this.position.y;
+		if (sY < 0 || sY > mapHeight-40)
+                        this.ship.collided();
 	},
 	draw: function(state){
 		if (!this.destroyed){
@@ -76,7 +77,7 @@ var Alien = DrawableElement.extend({
 	},
 	collided: function(){
 		this.destroyed = true;
-		window.particles.create([this.position.x + this.size.width/2, this.position.y + this.size.height/2], 10, this.color);
+		// window.particles.create([this.position.x + this.size.width/2, this.position.y + this.size.height/2], 10, this.color);
 	},
 	destroy: function(){
 		this._super();
