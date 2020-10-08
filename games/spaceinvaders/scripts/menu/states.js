@@ -1587,14 +1587,14 @@ var scoreBoardState = (function() {
         var i;
         for (i=0; i< num_score_list; i++) {
             ctx.textAlign = "left";
-            ctx.fillText(score_list[i].user_id,2*menuSize,y+i*2*menuSize);
+            ctx.fillText(score_list[i].user_id,(4+2)*menuSize,y+i*2*menuSize);
             ctx.textAlign = "right";
-            ctx.fillText(score_list[i].score,15*menuSize,y+i*2*menuSize);
+            ctx.fillText(score_list[i].score,(4+15)*menuSize,y+i*2*menuSize);
             ctx.textAlign = "left";
             date = new Date(score_list[i].updated_on);
             // date_str = date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear()
             date_str = date.toLocaleDateString("en-AU")
-            ctx.fillText(date_str,16*menuSize,y+i*2*menuSize);
+            ctx.fillText(date_str,(4+16)*menuSize,y+i*2*menuSize);
         }
         if (num_score_list == 0) {
             ctx.textAlign = "center";
@@ -1608,18 +1608,18 @@ var scoreBoardState = (function() {
             num_score_list = 0;
             score_list = [];
             // gameTitleState.init();
-	    // axios.get(SCORE_BASE_URL)
-            //  .then(scoreres => {
-            //    console.log(scoreres);
-            //    score_list = scoreres.data.items;
-            //    num_score_list = score_list.length;
-            //    if (num_score_list > 10) {
-            //        num_score_list = 10;
-            //    }
-            //  })
-            //  .catch(err => {
-            //    console.log(err);
-            //  })
+	    axios.get(SCORE_BASE_URL+'?game_id=5')
+            .then(scoreres => {
+                console.log(scoreres);
+                score_list = scoreres.data.items;
+                num_score_list = score_list.length;
+                if (num_score_list > 10) {
+                    num_score_list = 10;
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            })
         },
         draw: function() {
             renderer.clearMapFrame();
