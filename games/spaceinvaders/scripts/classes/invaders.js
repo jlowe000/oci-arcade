@@ -110,14 +110,14 @@ var Game = Class.extend({
         this.isOnGame = true;
     } else {
         this.isOnGame = false;
-        // console.log('game score = '+this.ship.getScore());
-        //axios.post(SCORE_BASE_URL,{ "game_id": 5, "user_id": window.name, "score": this.ship.getScore() })
-        //.then(scoreres => {
-        //  console.log(scoreres);
-        //})
-        //.catch(err => {
-        //  console.log(err);
-        //})
+        console.log('game score = '+this.ship.getScore());
+        axios.post(SCORE_BASE_URL,{ "game_id": 5, "user_id": window.name, "score": this.ship.getScore() })
+        .then(scoreres => {
+            console.log(scoreres);
+        })
+        .catch(err => {
+            console.log(err);
+        })
         // self.destroy();
         console.log('Reset');
         self.onExit();
