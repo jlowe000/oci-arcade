@@ -13,7 +13,7 @@ var Invasion = DrawableElement.extend({
 		};
 		
 		this.size = {
-			width: 390,
+			width: 380,
 			height: 210
 		};
 		

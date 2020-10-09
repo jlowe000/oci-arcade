@@ -25,7 +25,7 @@ var Alien = DrawableElement.extend({
 		this.hasCollision();
 		
 		var sX = this.position.x;
-		if (sX < this.size.width || sX > mapWidth-20-this.size.width)
+		if (sX < this.size.width || sX > mapWidth-10-this.size.width)
 			this.onWallCollision();
 			
 		var sY = this.position.y;
