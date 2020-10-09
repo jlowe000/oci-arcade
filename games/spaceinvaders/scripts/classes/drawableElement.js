@@ -26,6 +26,9 @@ var DrawableElement = Class.extend({
 	build: function(){
 		
 	},
+	pos: function(){
+		return this.position;	
+	},
 	update: function(){
 		
 	},

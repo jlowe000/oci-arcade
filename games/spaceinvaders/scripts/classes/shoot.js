@@ -17,6 +17,8 @@ var Shoot = DrawableElement.extend({
 		this.timer = null;
 
 		this.onAlienHit = options.onAlienHit || function() {};
+
+                EventHandler.addEvent({ "game_id": 5, "instance_id": invaders.instance_id, "user_id": window.name, "score": invaders.ship.getScore(), "level": invaders.level, "x": this.position.x, "y": this.position.y, "state" : "SHOT_FIRED" });
 	},
 	build: function(){
 		
@@ -84,6 +86,13 @@ var Shoot = DrawableElement.extend({
 		if (this.collateAliens) {
 			a = checkCollision(this.collateAliens);
                         if (a != null) {
+                                collisionState = '';
+                                if (this.collateAliens[a] == invaders.ship) {
+                                    collisionState = "SHIP_HIT";
+                                } else {
+                                    collisionState = "ALIEN_HIT";
+                                }
+                                EventHandler.addEvent({ "game_id": 5, "instance_id": invaders.instance_id, "user_id": window.name, "score": invaders.ship.getScore(), "level": invaders.level, "x": this.position.x, "y": this.position.y, "state" : collisionState });
                         	this.onAlienHit(this.collateAliens[a]);
 				return true;
 			} else {

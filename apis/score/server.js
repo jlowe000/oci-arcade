@@ -12,6 +12,7 @@ const ORDS_HOSTNAME = process.env.ORDS_HOSTNAME;
 const APEX_WORKSPACE = process.env.APEX_WORKSPACE;
 const API_USER = process.env.API_USER;
 const API_PASSWORD = process.env.API_PASSWORD;
+const EVENT_FNID = process.env.EVENT_FNID;
 
 // App
 const app = express();
@@ -47,7 +48,7 @@ app.post('/score', (req, res) => {
 });
 
 app.post('/event', (req, res) => {
-  axios.post('http://fnserver:8080/invoke/@EVENT_FN_ID@', req.body, {headers: { 'Content-Type': 'application/json'}})
+  axios.post('http://fnserver:8080/invoke/'+EVENT_FNID, req.body, {headers: { 'Content-Type': 'application/json'}})
   .then(fnres => {
     res.send(fnres.data);
   })
