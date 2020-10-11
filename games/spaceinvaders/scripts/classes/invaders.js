@@ -2,7 +2,8 @@
  * @author pjnovas
  */
 
-const SCORE_BASE_URL = 'http://'+window.location.hostname+':8081/score';
+// const SCORE_BASE_URL = 'http://'+window.location.hostname+':8081/score';
+const SCORE_BASE_URL = 'http://140.238.202.148:8081/score';
 
 var Game = Class.extend({
   init : function(options) {
@@ -36,6 +37,7 @@ var Game = Class.extend({
     this.isOnGame = false;
     this.level = 0;
     this.instance_id = '';
+    this.hiscore = null;
 
     // this.boundGameRun = this.gameRun.bind(this);
 
@@ -76,7 +78,7 @@ var Game = Class.extend({
 
     this.shield = new Shield({
       ctx : this.ctx,
-      x : 120,
+      x : 200,
       y : 440,
       brickSize : 8,
       color : '#fff',
@@ -109,9 +111,9 @@ var Game = Class.extend({
     var self = this;
 
     EventHandler.addEvent({ "game_id": 5, "instance_id": this.instance_id, "user_id": window.name, "score": this.ship.getScore(), "level": this.level, "x": this.ship.pos().x, "y": this.ship.pos().y, "state" : "DIED" });
-    if (self.lives > 0) {
-        self.lives = self.lives - 1;
-        console.log('lives = '+self.lives);
+    if (this.lives > 0) {
+        this.lives = this.lives - 1;
+        console.log('lives = '+this.lives);
         this.invasion.clearShoot();
         this.ship.clearShoot();
         // window.particles.init(this.ctx, { x1: mapMargin, y1: mapHeight, x2: mapWidth, y2: mapHeight });
@@ -135,6 +137,26 @@ var Game = Class.extend({
     }
     this.gameRun();
   },
+  getHiScore: function() {
+    if (this.hiscore === null) {
+      this.hiscore = 0;
+      axios.get(SCORE_BASE_URL+'?game_id=5')
+      .then(scoreres => {
+        console.log(scoreres);
+        this.hiscore = scoreres.data.items[0].score;
+        return this.hiscore;
+      })
+      .catch(err => {
+        console.log(err);
+        return 0;
+      })
+    } else {
+      if (this.ship.getScore() > this.hiscore) {
+        this.hiscore = this.ship.getScore();
+      }
+      return this.hiscore;
+    }
+  },
   isGameOn: function() {
     return this.isOnGame;
   },
@@ -145,7 +167,7 @@ var Game = Class.extend({
   build : function() {
     var self = this;
 
-    self.lives = 2;
+    this.lives = 2;
 
     this.shield = new Shield({
       ctx : this.ctx,
@@ -164,7 +186,7 @@ var Game = Class.extend({
       maxMoveLeft : 5,
       maxMoveRight : cnvW - 10,
       x : ((cnvW - 10) / 2),
-      y : 520,
+      y : 510,
       color : '#1be400',
       onShipHit : function() {
         self.stop();
@@ -216,14 +238,12 @@ var Game = Class.extend({
         this.ctx.textBaseline = "top";
         this.ctx.fillStyle = "#FFF";
         this.ctx.textAlign = "right";
-        this.ctx.fillText("1UP "+window.name, 7*16, 16);
-        this.ctx.fillText(this.ship.getScore(), 7*16, 32);
-        this.ctx.fillText('['+Math.round(this.startx)+','+Math.round(this.starty)+']', 18*16, 32);
-        this.ctx.textAlign = "left";
-        this.ctx.fillText('['+Math.round(this.endx)+','+Math.round(this.endy)+']', 24*16, 32);
-        this.ctx.fillText('['+this.currdir+']', 18*16, 48);
-        this.ctx.fillText('['+this.touchlength+']', 24*16, 48);
-        this.ctx.fillText('['+this.listener+']', 32*16, 48);
+        this.ctx.fillText("1UP "+window.name, 8*16, 16);
+        this.ctx.fillText(((this.ship.getScore() == 0) ? "00" : this.ship.getScore()), 8*16, 32);
+        this.ctx.fillText("LIVES", 36*16, 16);
+        this.ctx.fillText(this.lives, 36*16, 32);
+        this.ctx.fillText("HI SCORE", 24*16, 16);
+        this.ctx.fillText(((this.getHiScore() == 0) ? "00" : this.getHiScore()), 24*16, 32);
 
         this.shield.draw();
         this.ship.draw();
