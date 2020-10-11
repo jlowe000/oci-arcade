@@ -1,0 +1,10 @@
+schema_version: 20180708
+name: addevent
+version: 0.0.26
+runtime: node
+entrypoint: node func.js
+config:
+  ORDS_HOSTNAME: funcValue1
+  APEX_WORKSPACE: funcValue2
+  API_PASSWORD: funcValue3
+  API_USER: funcValue4
