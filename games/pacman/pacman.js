@@ -11300,7 +11300,7 @@ var overState = (function() {
     };
 })();
 
-const EVENT_BASE_URL = 'http://'+window.location.hostname+':8081/event';
+const EVENT_BASE_URL = 'http://'+window.location.hostname+':8081/event/publishevent';
 
 async function addEvent(input) {
    if (practiceMode == false) {

@@ -1,4 +1,4 @@
-const EVENT_BASE_URL = 'http://'+window.location.hostname+':8081/event';
+const EVENT_BASE_URL = 'http://'+window.location.hostname+':8081/event/publishevent';
 
 var EventHandler = (function() {
     return {

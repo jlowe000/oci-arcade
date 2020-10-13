@@ -1,0 +1,22 @@
+FROM oraclelinux:7-slim
+
+ARG release=19
+ARG update=8
+
+RUN  yum -y install oracle-release-el7 && \
+     yum -y install python3 && \
+     yum -y install curl vim-enhanced
+
+# Create app directory
+WORKDIR /root/app
+
+COPY apis/events/kafka/event-consumer/consumer.py .
+
+RUN pip3 install pykafka requests --user
+
+ENV ORDS_HOSTNAME="hostname"
+ENV APEX_WORKSPACE="workspace"
+ENV API_USER="api_user"
+ENV API_PASSWORD="api_password"
+
+CMD [ "python3", "consumer.py" ]

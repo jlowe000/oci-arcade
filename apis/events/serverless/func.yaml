@@ -1,0 +1,11 @@
+schema_version: 20180708
+name: addevent
+version: 0.0.28
+runtime: node
+entrypoint: node func.js
+config:
+  APEX_WORKSPACE: ociarcade
+  API_PASSWORD: W3lc0m3123!#
+  API_USER: ociarcade
+  FN_DOCKER_NETWORKS: arcade_network
+  ORDS_HOSTNAME: vpctikqkyihztgb-ausinno.adb.ap-sydney-1.oraclecloudapps.com
