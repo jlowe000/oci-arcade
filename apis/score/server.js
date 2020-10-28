@@ -5,7 +5,8 @@ const cors = require('cors')
 const express = require('express');
 
 // Constants
-const PORT = 8081;
+const SSL_PORT = 8081;
+const PORT = 8080;
 const HOST = '0.0.0.0';
 
 const ORDS_HOSTNAME = process.env.ORDS_HOSTNAME;
@@ -89,5 +90,19 @@ axios.get('http://fnserver:8080/v2/apps?name=events')
   console.log(err);
 });
 
-app.listen(PORT, HOST);
+// app.listen(PORT, HOST);
+
+const http = require('http');
+const https = require('https');
+const fs = require('fs');
+
+const options = {
+  key: fs.readFileSync('/root/keys/key.pem'),
+  cert: fs.readFileSync('/root/keys/cert.pem')
+};
+
+http.createServer(app.handle.bind(app)).listen(PORT, HOST);
+https.createServer(options,app.handle.bind(app)).listen(SSL_PORT, HOST);
+
 console.log('Running on http://'+HOST+':'+PORT);
+console.log('Running on https://'+HOST+':'+SSL_PORT);
