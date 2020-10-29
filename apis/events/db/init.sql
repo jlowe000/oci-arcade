@@ -27,3 +27,25 @@ BEGIN
   COMMIT;
 END;
 /
+
+DECLARE
+  l_priv_roles owa.vc_arr;
+  l_priv_patterns owa.vc_arr;
+BEGIN
+  l_priv_roles(1) := 'oracle.dbtools.role.autorest.OCIARCADE.EVENT_TABLE';
+  l_priv_roles(2) := 'ociarcade api';
+  l_priv_roles(3) := 'oracle.dbtools.autorest.any.schema';
+  l_priv_roles(4) := 'SQL Developer';
+  l_priv_patterns(1) := '/metadata-catalog/event_table/*';
+  l_priv_patterns(2) := '/event_table/*';
+
+  ords.define_privilege(
+    p_privilege_name     => 'oracle.dbtools.autorest.privilege.OCIARCADE.EVENT_TABLE',
+    p_roles              => l_priv_roles,
+    p_patterns           => l_priv_patterns,
+    p_label              => 'oracle.dbtools.autorest.privilege.OCIARCADE.EVENT_TABLE',
+    p_description        => 'oracle.dbtools.autorest.privilege.OCIARCADE.EVENT_TABLE'
+  );
+  COMMIT;
+END;
+/
