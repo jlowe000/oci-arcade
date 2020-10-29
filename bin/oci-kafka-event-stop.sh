@@ -1,2 +1,2 @@
-docker stop api-score
+docker stop oci-kafka-events
 

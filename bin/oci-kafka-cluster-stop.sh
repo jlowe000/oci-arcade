@@ -1,3 +1,2 @@
-cd containers/kafka
-docker-compose -f oci-kafka-compose.yml down
-cd -
+docker kill kafka_kafka_1
+docker kill kafka_zookeeper_1
