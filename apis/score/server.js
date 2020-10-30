@@ -14,6 +14,25 @@ const APEX_WORKSPACE = process.env.APEX_WORKSPACE;
 const API_USER = process.env.API_USER;
 const API_PASSWORD = process.env.API_PASSWORD;
 const EVENT_FNID = process.env.EVENT_FNID;
+const token_refresh_interval = 1800000;
+
+let access_token = '';
+
+function getToken() {
+    console.log('retrieve token');
+    axios.post('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/oauth/token', 'grant_type=client_credentials', { auth: { username: API_USER, password: API_PASSWORD }})
+    .then(oauthres => {
+        access_token = oauthres.data.access_token;
+        console.log('token:'+access_token);
+    })
+    .catch(err => {
+        console.log(err);
+        exit(-1);
+    });
+}
+
+getToken();
+setInterval(getToken, token_refresh_interval);
 
 // App
 const app = express();
@@ -30,7 +49,7 @@ app.get('/', (req, res) => {
 
 app.get('/score', (req, res) => {
   let game_id = req.query.game_id;
-  axios.get('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/score_table/?q={"game_id":'+game_id+',"score":{"$notnull": null},"$orderby":{"score":"desc"}}', { auth: { username: API_USER, password: API_PASSWORD  }})
+  axios.get('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/score_table/?q={"game_id":'+game_id+',"score":{"$notnull": null},"$orderby":{"score":"desc"}}', { headers: { 'Authorization': 'Bearer '+access_token }})
   .then(adwres => {
     res.send(adwres.data);
   })
@@ -41,7 +60,7 @@ app.get('/score', (req, res) => {
 });
 
 app.post('/score', (req, res) => {
-  axios.post('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/score_table/', req.body,{ auth: { username: API_USER, password: API_PASSWORD  }})
+  axios.post('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/score_table/', req.body, { headers: { 'Authorization': 'Bearer '+access_token }})
   .then(adwres => {
     res.send(adwres.data);
   })
@@ -106,3 +125,4 @@ https.createServer(options,app.handle.bind(app)).listen(SSL_PORT, HOST);
 
 console.log('Running on http://'+HOST+':'+PORT);
 console.log('Running on https://'+HOST+':'+SSL_PORT);
+
