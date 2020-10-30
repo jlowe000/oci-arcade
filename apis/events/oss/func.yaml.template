@@ -1,0 +1,11 @@
+schema_version: 20180708
+name: publishevent-oss
+version: 0.0.12
+runtime: python3.7.1
+entrypoint: /python/bin/fdk /function/func.py handler
+memory: 64
+config:
+  BOOTSTRAP_SERVER: 
+  API_USER: 
+  API_PASSWORD: 
+  FN_DOCKER_NETWORKS: arcade_network

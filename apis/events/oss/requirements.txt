@@ -1,0 +1,2 @@
+fdk
+kafka-python
