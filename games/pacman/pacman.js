@@ -11269,7 +11269,8 @@ var finishState = (function(){
 // Game Over state
 // (state when player has lost last life)
 
-const SCORE_BASE_URL = 'http://'+window.location.hostname+':8081/score';
+const API_HOSTNAME = 'oci-arcade-web';
+const SCORE_BASE_URL = 'https://'+API_HOSTNAME+':8081/score';
 
 var overState = (function() {
     var frames;
@@ -11300,7 +11301,8 @@ var overState = (function() {
     };
 })();
 
-const EVENT_BASE_URL = 'http://'+window.location.hostname+':8081/event/publishevent';
+// const EVENT_BASE_URL = 'https://'+API_HOSTNAME+':8081/event/publishevent';
+const EVENT_BASE_URL = 'https://'+API_HOSTNAME+':8081/event/publishossevent';
 
 async function addEvent(input) {
    if (practiceMode == false) {
