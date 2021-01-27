@@ -1,3 +1,2 @@
-cd containers/kafka
-docker-compose -f oci-kafka-compose.yml up
-cd -
+docker run -d --rm --network arcade_network -p 2181:2181 --name kafka_zookeeper_1 --hostname kafka_zookeeper_1 wurstmeister/zookeeper
+docker run -d --rm --network arcade_network -p 9092:9092 --name kafka_kafka_1 --hostname kafka_kafka_1 --env KAFKA_ADVERTISED_HOST_NAME=kafka_kafka_1 --env KAFKA_CREATE_TOPICS="oci-arcade-events:1:1" --env KAFKA_ZOOKEEPER_CONNECT=kafka_zookeeper_1:2181 --env KAFKA_HEAP_OPTS="-Xms128m -Xmx512m" kafka_kafka

@@ -3,6 +3,7 @@ import os
 import requests
 from requests.auth import HTTPBasicAuth
 from pykafka import KafkaClient
+from pykafka.common import OffsetType
 import json
 
 ORDS_HOSTNAME = os.environ.get('ORDS_HOSTNAME')
@@ -14,7 +15,7 @@ client = KafkaClient(hosts='kafka_kafka_1:9092')
 print(client.topics)
 topic = client.topics[b'oci-arcade-events']
 
-consumer = topic.get_simple_consumer()
+consumer = topic.get_simple_consumer(auto_offset_reset=OffsetType.LATEST,reset_offset_on_start=True)
 for msg in consumer:
   if msg is not None:
     try:

@@ -10,6 +10,11 @@ RUN  curl -sL https://rpm.nodesource.com/setup_14.x | bash && \
      yum -y install nodejs && \
      rm -rf /var/cache/yum
 
+# Create keys directory
+WORKDIR /root/keys
+
+COPY infra/compute/*.pem ./
+
 # Create app directory
 WORKDIR /root/app
 
@@ -30,5 +35,6 @@ ENV API_USER=
 ENV API_PASSWORD=
 ENV EVENT_FNID=
 
+EXPOSE 8080
 EXPOSE 8081
 CMD [ "node", "server.js" ]

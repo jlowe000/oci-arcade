@@ -5,13 +5,16 @@ services:
     ports:
       - "2181:2181"
   kafka:
-    build: kafka-cluster.Dockerfile
+    build:
+      context: .
+      dockerfile: oci-kafka-cluster.Dockerfile
     ports:
       - "9092:9092"
     environment:
       KAFKA_ADVERTISED_HOST_NAME: kafka_kafka_1
       KAFKA_CREATE_TOPICS: "oci-arcade-events:1:1"
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ZOOKEEPER_CONNECT: kafka_zookeeper_1:2181
+      KAFKA_HEAP_OPTS: -Xms128m -Xmx512m
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 networks:
