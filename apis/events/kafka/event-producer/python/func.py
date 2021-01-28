@@ -2,14 +2,15 @@ import io
 import json
 import logging
 import sys
+import os
 # import traceback
 
 from fdk import response
 from kafka import KafkaProducer
 
 BOOTSTRAP_SERVER = os.environ.get('BOOTSTRAP_SERVER')
-OSS_USER = os.environ.get('OSS_USER')
-OSS_PASSWORD = os.environ.get('OSS_PASSWORD')
+OSS_USER = os.environ.get('API_USER')
+OSS_PASSWORD = os.environ.get('API_PASSWORD')
 
 def handler(ctx, data: io.BytesIO = None):
     try:
@@ -19,8 +20,9 @@ def handler(ctx, data: io.BytesIO = None):
            sasl_mechanism = 'PLAIN',
            sasl_plain_username = OSS_USER,
            sasl_plain_password = OSS_PASSWORD,
-           value_serializer=lambda x: dumps(x).encode('utf-8'))
-        producer.send('project_pac-man_demo_stream', key=key.encode('utf-8'), value=body)
+           key_serializer=lambda x: json.dumps(x).encode('utf-8'),
+           value_serializer=lambda x: json.dumps(x).encode('utf-8'))
+        producer.send('pacman_topic', key=body['instance_id'], value=body)
         producer.flush()
         producer.close()
         return response.Response(ctx, response_data=json.dumps({"message": "good"}), headers={"Content-Type": "application/json"})

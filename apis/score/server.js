@@ -117,7 +117,8 @@ const fs = require('fs');
 
 const options = {
   key: fs.readFileSync('/root/keys/key.pem'),
-  cert: fs.readFileSync('/root/keys/cert.pem')
+  cert: fs.readFileSync('/root/keys/cert.pem'),
+  passphrase: 'Welcome123!#'
 };
 
 http.createServer(app.handle.bind(app)).listen(PORT, HOST);

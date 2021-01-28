@@ -1,9 +1,10 @@
 schema_version: 20180708
 name: publishevent
-version: 0.0.47
+version: 0.0.52
 runtime: java
 build_image: fnproject/fn-java-fdk-build:jdk11-1.0.110
 run_image: fnproject/fn-java-fdk:jre11-1.0.110
 cmd: com.oracle.oci.arcade.events.EventHandler::handleRequest
+memory: 64
 config:
   FN_DOCKER_NETWORKS: arcade_network
