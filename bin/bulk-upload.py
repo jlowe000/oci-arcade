@@ -3,11 +3,11 @@ import mimetypes
 import oci
 import glob
 
-config = oci.config.from_file('~/.oci/oci.config','DEFAULT')
+config = oci.config.from_file('~/.oci/config','DEFAULT')
 
 os = oci.object_storage.ObjectStorageClient(config)
 
-namespace = 'sdthmi7fnygp'
+namespace = 'os.namespace'
 bucket = 'oci-arcade'
 
 files = glob.glob(sys.argv[1]+'/**/*.*',recursive=True)
