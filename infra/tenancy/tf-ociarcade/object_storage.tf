@@ -4,7 +4,7 @@ resource oci_objectstorage_bucket oci-arcade {
 
     compartment_id      = var.compartment_ocid
     name = "oci-arcade"
-    namespace = "sddc0l50szby"
+    namespace = var.bucket_ns
 
     #Optional
     access_type = "ObjectRead"
