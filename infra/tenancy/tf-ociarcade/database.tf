@@ -38,3 +38,16 @@ resource oci_database_autonomous_database export_arcade {
   whitelisted_ips = [
   ]
 }
+
+resource oci_database_autonomous_database_wallet export_arcade_wallet {
+    #Required
+    autonomous_database_id = oci_database_autonomous_database.export_arcade.id
+    password = var.custom_adb_admin_password
+    base64_encode_content  = "true"
+    generate_type = "SINGLE"
+}
+
+resource local_file export_arcade_wallet_file {
+    content_base64 = oci_database_autonomous_database_wallet.export_arcade_wallet.content
+    filename = "${path.module}/arcade-wallet.zip"
+}

@@ -109,6 +109,38 @@ resource null_resource export_arcade-web_file_publickey {
     destination = "/tmp/terraform_api_public_key.pem"
   }
 }
+resource null_resource export_arcade-web_file_ociconfig {
+  depends_on = [oci_core_instance.export_arcade-web]
+  
+  connection {
+    agent       = false
+    timeout     = "30m"
+    host        = oci_core_instance.export_arcade-web.public_ip
+    user        = "opc"
+    private_key = tls_private_key.public_private_key_pair.private_key_pem
+  }
+
+  provisioner file {
+    content     = "[DEFAULT]\nuser=${var.user_id}\nfingerprint=${tls_private_key.public_private_key_pair.public_key_fingerprint_md5}\ntenancy=${var.tenancy_ocid}\nregion=${var.region}\nkey_file=/home/oracle/.oci/terraform_api_key.pem\n"
+    destination = "/tmp/config"
+  }
+}
+resource null_resource export_arcade-web_file_wallet {
+  depends_on = [local_file.export_arcade_wallet_file]
+  
+  connection {
+    agent       = false
+    timeout     = "30m"
+    host        = oci_core_instance.export_arcade-web.public_ip
+    user        = "opc"
+    private_key = tls_private_key.public_private_key_pair.private_key_pem
+  }
+
+  provisioner file {
+    source     = "${path.module}/arcade-wallet.zip"
+    destination = "/tmp/arcade-wallet.zip"
+  }
+}
 resource null_resource export_arcade-web_remote-exec {
   depends_on = [null_resource.export_arcade-web_file]
   
@@ -142,7 +174,7 @@ resource null_resource export_arcade-web_remote-exec_oracle {
   provisioner remote-exec {
     inline = [
       "chmod +x /tmp/scripts/bootstrap-user.sh",
-      "sudo -u oracle /tmp/scripts/bootstrap-user.sh"
+      "sudo su - oracle bash -c '/tmp/scripts/bootstrap-user.sh ${var.custom_adb_admin_password} ${oci_database_autonomous_database.export_arcade.connection_urls[0]["apex_url"]}'"
     ]
   }
 }

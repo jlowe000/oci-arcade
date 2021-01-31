@@ -53,3 +53,10 @@ BEGIN
 END;
 /
 
+SET COLSEP ,
+SET HEADSEP OFF
+SET PAGESIZE 0
+SET TRIMSPOOL ON
+SPOOL 'infra/db/client.csv'
+SELECT client_id, client_secret FROM user_ords_clients;
+SPOOL OFF;

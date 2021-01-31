@@ -5,4 +5,4 @@ variable region { default = "ap-sydney-1" }
 variable compartment_ocid { default = "ocid1.compartment.oc1..XXXX" }
 variable tenancy_ocid { default = "ocid1.compartment.oc1..XXXX" }
 variable custom_ssh_key { default = "ssh-rsa XXXX" }
-variable custom_adb_admin_password { default = "Welcome123!#" }
+variable custom_adb_admin_password { default = "WelcomeTiger123" }
