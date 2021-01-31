@@ -13,7 +13,7 @@ if [ ! -f infra/compute/key.pem ]; then
   OPENSSL_PWD=""
   if [ "$2" != "" ]
   then 
-    OPENSSL_PWD="-passin pass:$2"
+    OPENSSL_PWD="-passout pass:$2"
   fi
   openssl req -x509 -newkey rsa:4096 ${OPENSSL_PWD} -subj /CN=AU/ -keyout infra/compute/key.pem -out infra/compute/cert.pem -days 365
 fi
