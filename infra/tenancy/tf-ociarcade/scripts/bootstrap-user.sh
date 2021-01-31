@@ -11,10 +11,10 @@ echo "SSL_SERVER_DN_MATCH=yes" >> /home/oracle/wallet/sqlnet.ora
 echo "create user ociarcade identified by ${USER_PWD};" > /home/oracle/repos/oci-arcade/infra/db/schema.sql
 echo "grant resource, connect, unlimited tablespace to ociarcade;" >> /home/oracle/repos/oci-arcade/infra/db/schema.sql
 cd /home/oracle/repos/oci-arcade
-echo "export TNS_ADMIN=/home/oracle/wallet" >> ~/.bash_profile
-echo "export ORACLE_HOME=/usr/lib/oracle/18.3/client64" >> ~/.bash_profile
-echo "export LD_LIBRARY_PATH=$ORACLE_HOME/lib" >> ~/.bash_profile
-echo "export PATH=$PATH:$ORACLE_HOME/bin" >> ~/.bash_profile
+echo 'export TNS_ADMIN=/home/oracle/wallet' >> ~/.bash_profile
+echo 'export ORACLE_HOME=/usr/lib/oracle/18.3/client64' >> ~/.bash_profile
+echo 'export LD_LIBRARY_PATH=${ORACLE_HOME}/lib' >> ~/.bash_profile
+echo 'export PATH=${PATH}:${ORACLE_HOME}/bin' >> ~/.bash_profile
 . ~/.bash_profile
 exit | sqlplus admin/${USER_PWD}@arcade_low @ infra/db/schema.sql
 exit | sqlplus ociarcade/${USER_PWD}@arcade_low @ infra/db/init.sql
