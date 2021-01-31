@@ -10,6 +10,7 @@ then
   BUILD_OPTIONS="${BUILD_OPTIONS} --build-arg API_PASSWORD=$2"
 fi 
 if [ ! -f infra/compute/key.pem ]; then
+    OPENSSL_PWD=""
     if [ "$2" != "" ]
 	then 
 	  OPENSSL_PWD="pass:$2"
