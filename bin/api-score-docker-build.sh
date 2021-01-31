@@ -3,4 +3,12 @@ if [ ! -f infra/compute/key.pem ]; then
 fi
 docker images
 docker rmi api-score
-docker build --tag api-score --file containers/web/api-score.Dockerfile .
+if [ "$1" != "" ]
+then
+  BUILD_OPTIONS="${BUILD_OPTIONS} --build-arg ORDS_HOSTNAME=$1"
+fi 
+if [ "$2" != "" ]
+then
+  BUILD_OPTIONS="${BUILD_OPTIONS} --build-arg API_PASSWORD=$2"
+fi 
+docker build ${BUILD_OPTIONS} --tag api-score --file containers/web/api-score.Dockerfile .

@@ -2,6 +2,10 @@ FROM oraclelinux:7-slim
 
 ARG release=19
 ARG update=8
+ARG ORDS_HOSTNAME
+ARG APEX_WORKSPACE=ociarcade
+ARG API_USER=ociarcade
+ARG API_PASSWORD
 
 RUN  yum -y install oracle-release-el7 && \
      yum -y install curl 
