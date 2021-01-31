@@ -19,4 +19,4 @@ if [ ! -f infra/compute/key.pem ]; then
   fi
   openssl req -x509 -newkey rsa:4096 ${OPENSSL_PWD} -subj /CN=AU/ -keyout infra/compute/key.pem -out infra/compute/cert.pem -days 365
 fi
-docker build --tag api-score ${BUILD_OPTIONS} --file containers/web/api-score.Dockerfile
+docker build --tag api-score ${BUILD_OPTIONS} --file containers/web/api-score.Dockerfile .
