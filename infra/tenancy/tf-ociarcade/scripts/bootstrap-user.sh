@@ -27,4 +27,5 @@ bin/api-score-docker-build.sh ${ORDS_HOSTNAME} ${USER_PWD}
 bin/api-score-docker-run.sh
 bin/oci-fn-run.sh
 bin/oci-fn-build.sh
+bin/api-events-serverless-deploy.sh ${ORDS_HOSTNAME}
 bin/oci-arcade-storage-build.sh ${API_HOSTNAME}
