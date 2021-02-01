@@ -1,6 +1,6 @@
 USER_PWD=$1
 ORDS_HOSTNAME=`echo $2 | cut -d "/" -f 3`
-API_HOSTNAME=$2
+API_HOSTNAME=$3
 mkdir /home/oracle/repos
 cd /home/oracle/repos/
 git clone https://github.com/jlowe000/oci-arcade.git

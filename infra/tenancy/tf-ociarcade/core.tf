@@ -121,7 +121,7 @@ resource null_resource export_arcade-web_file_ociconfig {
   }
 
   provisioner file {
-    content     = "[DEFAULT]\nuser=${var.user_id}\nfingerprint=${tls_private_key.public_private_key_pair.public_key_fingerprint_md5}\ntenancy=${var.tenancy_ocid}\nregion=${var.region}\nkey_file=/home/oracle/.oci/terraform_api_key.pem\n"
+    content     = "[DEFAULT]\nuser=${var.user_id}\nfingerprint=${oci_identity_api_key.current_user_api_key.fingerprint}\ntenancy=${var.tenancy_ocid}\nregion=${var.region}\nkey_file=/home/oracle/.oci/terraform_api_key.pem\n"
     destination = "/tmp/config"
   }
 }
@@ -174,7 +174,7 @@ resource null_resource export_arcade-web_remote-exec_oracle {
   provisioner remote-exec {
     inline = [
       "chmod +x /tmp/scripts/bootstrap-user.sh",
-      "sudo su - oracle bash -c '/tmp/scripts/bootstrap-user.sh ${var.custom_adb_admin_password} ${oci_database_autonomous_database.export_arcade.connection_urls[0]["apex_url"]}'"
+      "sudo su - oracle bash -c '/tmp/scripts/bootstrap-user.sh ${var.custom_adb_admin_password} ${oci_database_autonomous_database.export_arcade.connection_urls[0]["apex_url"]} ${oci_core_instance.export_arcade-web.public_ip}'"
     ]
   }
 }
