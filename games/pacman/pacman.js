@@ -11301,7 +11301,7 @@ var overState = (function() {
 })();
 
 // const EVENT_BASE_URL = 'https://'+API_HOSTNAME+':8081/event/publishevent';
-const EVENT_BASE_URL = 'https://'+API_HOSTNAME+':8081/event/publishossevent';
+const EVENT_BASE_URL = 'https://'+API_HOSTNAME+':8081/event/serverless';
 
 async function addEvent(input) {
    if (practiceMode == false) {

@@ -1,4 +1,4 @@
-const EVENT_BASE_URL = 'https://'+API_HOSTNAME+':8081/event/publishevent';
+const EVENT_BASE_URL = 'https://'+API_HOSTNAME+':8081/event/serverless';
 
 var EventHandler = (function() {
     return {
