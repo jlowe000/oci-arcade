@@ -4,3 +4,4 @@ cd games
 python3 ../bin/bulk-upload.py pacman
 python3 ../bin/bulk-upload.py spaceinvaders
 cd -
+echo 'oci os object bulk-delete -ns $2 -bn oci-arcade' > /tmp/scripts/bulk-delete.sh
