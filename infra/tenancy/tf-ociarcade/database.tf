@@ -19,7 +19,7 @@ resource oci_database_autonomous_database export_arcade {
   is_auto_scaling_enabled = "false"
   is_data_guard_enabled   = "false"
   is_dedicated            = "false"
-  is_free_tier            = "true"
+  is_free_tier            = var.is_free_tier
   #is_preview_version_with_service_terms_accepted = <<Optional value not found in discovery>>
   #is_refreshable_clone = <<Optional value not found in discovery>>
   license_model = "LICENSE_INCLUDED"

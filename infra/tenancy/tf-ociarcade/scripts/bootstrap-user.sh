@@ -1,7 +1,8 @@
 USER_PWD=$1
 ORDS_HOSTNAME=`echo $2 | cut -d "/" -f 3`
 API_HOSTNAME=$3
-BUCKET_NS=$4
+API_KEY_ENABLED=$4
+BUCKET_NS=$5
 mkdir /home/oracle/repos
 cd /home/oracle/repos/
 git clone https://github.com/jlowe000/oci-arcade.git
@@ -29,4 +30,6 @@ bin/oci-fn-build.sh
 bin/api-events-serverless-deploy.sh ${ORDS_HOSTNAME}
 bin/api-score-docker-build.sh ${ORDS_HOSTNAME} ${USER_PWD}
 bin/api-score-docker-run.sh
-bin/oci-arcade-storage-build.sh ${API_HOSTNAME} ${BUCKET_NS}
+if [ "${API_KEY_ENABLE}" != "" ]; then
+  bin/oci-arcade-storage-build.sh ${API_HOSTNAME} ${BUCKET_NS}
+fi

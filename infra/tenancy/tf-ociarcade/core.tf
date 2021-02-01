@@ -48,11 +48,7 @@ resource oci_core_instance export_arcade-web {
     "ssh_authorized_keys" = "${var.custom_ssh_key}\n${tls_private_key.public_private_key_pair.public_key_openssh}"
   }
   #preserve_boot_volume = <<Optional value not found in discovery>>
-  shape = "VM.Standard.E2.1.Micro"
-  shape_config {
-    memory_in_gbs = "1"
-    ocpus         = "1"
-  }
+  shape = var.compute_shape
   source_details {
     #boot_volume_size_in_gbs = <<Optional value not found in discovery>>
     #kms_key_id = <<Optional value not found in discovery>>
@@ -111,6 +107,7 @@ resource null_resource export_arcade-web_file_publickey {
 }
 resource null_resource export_arcade-web_file_ociconfig {
   depends_on = [oci_core_instance.export_arcade-web]
+  count = var.enable_api_key ? 1 : 0
   
   connection {
     agent       = false
@@ -121,7 +118,7 @@ resource null_resource export_arcade-web_file_ociconfig {
   }
 
   provisioner file {
-    content     = "[DEFAULT]\nuser=${var.user_id}\nfingerprint=${oci_identity_api_key.current_user_api_key.fingerprint}\ntenancy=${var.tenancy_ocid}\nregion=${var.region}\nkey_file=/home/oracle/.oci/terraform_api_key.pem\n"
+    content     = "[DEFAULT]\nuser=${var.user_id}\nfingerprint=${oci_identity_api_key.current_user_api_key[count.index].fingerprint}\ntenancy=${var.tenancy_ocid}\nregion=${var.region}\nkey_file=/home/oracle/.oci/terraform_api_key.pem\n"
     destination = "/tmp/config"
   }
 }
@@ -174,7 +171,7 @@ resource null_resource export_arcade-web_remote-exec_oracle {
   provisioner remote-exec {
     inline = [
       "chmod +x /tmp/scripts/bootstrap-user.sh",
-      "sudo su - oracle bash -c '/tmp/scripts/bootstrap-user.sh ${var.custom_adb_admin_password} ${oci_database_autonomous_database.export_arcade.connection_urls[0]["apex_url"]} ${oci_core_instance.export_arcade-web.public_ip} ${var.bucket_ns}'"
+      "sudo su - oracle bash -c '/tmp/scripts/bootstrap-user.sh ${var.custom_adb_admin_password} ${oci_database_autonomous_database.export_arcade.connection_urls[0]["apex_url"]} ${oci_core_instance.export_arcade-web.public_ip} ${var.enable_api_key} ${var.bucket_ns}'"
     ]
   }
 }
@@ -354,6 +351,7 @@ resource oci_core_default_security_list export_Default-Security-List-for-vcn-202
   manage_default_resource_id = oci_core_vcn.export_vcn-20200918-0835.default_security_list_id
 }
 resource oci_identity_api_key current_user_api_key {
-    key_value = tls_private_key.public_private_key_pair.public_key_pem
-    user_id = var.user_id
+  count = var.enable_api_key ? 1 : 0
+  key_value = tls_private_key.public_private_key_pair.public_key_pem
+  user_id = var.user_id
 }
