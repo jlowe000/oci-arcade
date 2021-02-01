@@ -26,6 +26,6 @@ output "sqldev_url" {
   value = replace(lookup(oci_database_autonomous_database.export_arcade.connection_urls[0],"sql_dev_web_url"),"admin","ociarcade")
 }
 
-output "ssh template" {
+output "ssh_template" {
   value = "ssh -i ~/.ssh/id_rsa opc@${oci_core_instance.export_arcade-web.public_ip}"
 }
