@@ -12,11 +12,12 @@ if [ -f infra/db/client.csv ]; then
   BUILD_OPTIONS="${BUILD_OPTIONS} --build-arg API_PASSWORD=$API_PASSWORD"
 fi
 if [ ! -f infra/compute/key.pem ]; then
-  OPENSSL_PWD=""
-  if [ "$2" != "" ]
-  then 
-    OPENSSL_PWD="-passout pass:$2"
-  fi
   openssl req -x509 -newkey rsa:4096 ${OPENSSL_PWD} -subj /CN=AU/ -keyout infra/compute/key.pem -out infra/compute/cert.pem -days 365
+fi
+OPENSSL_PWD=""
+if [ "$2" != "" ]
+then 
+  OPENSSL_PWD="-passout pass:$2"
+  BUILD_OPTIONS="${BUILD_OPTIONS} --build-arg CERT_PASSWORD=$2"
 fi
 docker build --tag api-score ${BUILD_OPTIONS} --file containers/web/api-score.Dockerfile .

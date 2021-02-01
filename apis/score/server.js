@@ -13,7 +13,8 @@ const ORDS_HOSTNAME = process.env.ORDS_HOSTNAME;
 const APEX_WORKSPACE = process.env.APEX_WORKSPACE;
 const API_USER = process.env.API_USER;
 const API_PASSWORD = process.env.API_PASSWORD;
-const EVENT_FNID = process.env.EVENT_FNID;
+const CERT_PASSWORD = process.env.CERT_PASSWORD;
+
 const token_refresh_interval = 1800000;
 
 let access_token = '';
@@ -118,7 +119,7 @@ const fs = require('fs');
 const options = {
   key: fs.readFileSync('/root/keys/key.pem'),
   cert: fs.readFileSync('/root/keys/cert.pem'),
-  passphrase: API_PASSWORD
+  passphrase: CERT_PASSWORD
 };
 
 http.createServer(app.handle.bind(app)).listen(PORT, HOST);
