@@ -161,7 +161,7 @@ resource null_resource export_arcade-web_remote-exec {
   }
 }
 resource null_resource export_arcade-web_remote-exec_oracle {
-  depends_on = [null_resource.export_arcade-web_remote-exec]
+  depends_on = [null_resource.export_arcade-web_remote-exec,oci_database_autonomous_database.export_arcade]
   
   connection {
     agent       = false
@@ -174,7 +174,7 @@ resource null_resource export_arcade-web_remote-exec_oracle {
   provisioner remote-exec {
     inline = [
       "chmod +x /tmp/scripts/bootstrap-user.sh",
-      "sudo su - oracle bash -c '/tmp/scripts/bootstrap-user.sh ${var.custom_adb_admin_password} ${oci_database_autonomous_database.export_arcade.connection_urls[0]["apex_url"]} ${oci_core_instance.export_arcade-web.public_ip}'"
+      "sudo su - oracle bash -c '/tmp/scripts/bootstrap-user.sh ${var.custom_adb_admin_password} ${oci_database_autonomous_database.export_arcade.connection_urls[0]["apex_url"]} ${oci_core_instance.export_arcade-web.public_ip} ${var.bucket_ns}'"
     ]
   }
 }

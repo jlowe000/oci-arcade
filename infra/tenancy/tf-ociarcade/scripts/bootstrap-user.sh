@@ -1,6 +1,7 @@
 USER_PWD=$1
 ORDS_HOSTNAME=`echo $2 | cut -d "/" -f 3`
 API_HOSTNAME=$3
+BUCKET_NS=$4
 mkdir /home/oracle/repos
 cd /home/oracle/repos/
 git clone https://github.com/jlowe000/oci-arcade.git
@@ -24,8 +25,8 @@ exit | sqlplus ociarcade/${USER_PWD}@arcade_low @ apis/events/db/init.sql
 cp containers/web/api-score.Dockerfile.template containers/web/api-score.Dockerfile
 chmod 755 bin/*.sh
 bin/api-score-docker-build.sh ${ORDS_HOSTNAME} ${USER_PWD}
-bin/api-score-docker-run.sh
 bin/oci-fn-run.sh
 bin/oci-fn-build.sh
 bin/api-events-serverless-deploy.sh ${ORDS_HOSTNAME}
-bin/oci-arcade-storage-build.sh ${API_HOSTNAME}
+bin/api-score-docker-run.sh
+bin/oci-arcade-storage-build.sh ${API_HOSTNAME} ${BUCKET_NS}
