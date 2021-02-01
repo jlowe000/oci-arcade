@@ -41,5 +41,5 @@ This is a rought set of notes to get this up and running.
   - Pacman URL
   - Space Invaders URL
 - Note:
-  - Need to "accept" exception in browser for the API calls (https://<compute-public-ip>:8081/event)
-  - Without this step, API calls from game will fail with CERT exception
+  - Need to "accept" exception in browser for the API calls (https://<compute-public-ip>:8081/event) - Without this step, API calls from game will fail with CERT exception
+  - If you are wanting to "Destroy" the stack, you need to delete the folders in the oci-arcade bucket before running the Terraform destroy activity. Otherwise, the bucket will fail to be destroyed.
