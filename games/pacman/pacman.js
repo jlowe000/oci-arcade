@@ -11269,7 +11269,6 @@ var finishState = (function(){
 // Game Over state
 // (state when player has lost last life)
 
-const API_HOSTNAME = 'oci-arcade-web';
 const SCORE_BASE_URL = 'https://'+API_HOSTNAME+':8081/score';
 
 var overState = (function() {

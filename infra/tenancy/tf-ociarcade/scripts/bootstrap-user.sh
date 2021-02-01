@@ -1,5 +1,6 @@
 USER_PWD=$1
 ORDS_HOSTNAME=`echo $2 | cut -d "/" -f 3`
+API_HOSTNAME=$2
 mkdir /home/oracle/repos
 cd /home/oracle/repos/
 git clone https://github.com/jlowe000/oci-arcade.git
@@ -25,3 +26,4 @@ bin/api-score-docker-build.sh ${ORDS_HOSTNAME} ${USER_PWD}
 bin/api-score-docker-run.sh
 bin/oci-fn-run.sh
 bin/oci-fn-build.sh
+bin/oci-arcade-storage-build.sh ${API_HOSTNAME}

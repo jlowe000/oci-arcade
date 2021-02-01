@@ -7,7 +7,8 @@ config = oci.config.from_file('~/.oci/config','DEFAULT')
 
 os = oci.object_storage.ObjectStorageClient(config)
 
-namespace = 'os.namespace'
+namespace = os.get_namespace().data
+print(namespace)
 bucket = 'oci-arcade'
 
 files = glob.glob(sys.argv[1]+'/**/*.*',recursive=True)

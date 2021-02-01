@@ -1,4 +1,3 @@
-const API_HOSTNAME = 'oci-arcade-web'
 const EVENT_BASE_URL = 'https://'+API_HOSTNAME+':8081/event/publishevent';
 
 var EventHandler = (function() {
