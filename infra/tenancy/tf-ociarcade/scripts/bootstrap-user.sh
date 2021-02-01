@@ -24,9 +24,9 @@ exit | sqlplus ociarcade/${USER_PWD}@arcade_low @ apis/score/db/init.sql
 exit | sqlplus ociarcade/${USER_PWD}@arcade_low @ apis/events/db/init.sql
 cp containers/web/api-score.Dockerfile.template containers/web/api-score.Dockerfile
 chmod 755 bin/*.sh
-bin/api-score-docker-build.sh ${ORDS_HOSTNAME} ${USER_PWD}
 bin/oci-fn-run.sh
 bin/oci-fn-build.sh
 bin/api-events-serverless-deploy.sh ${ORDS_HOSTNAME}
+bin/api-score-docker-build.sh ${ORDS_HOSTNAME} ${USER_PWD}
 bin/api-score-docker-run.sh
 bin/oci-arcade-storage-build.sh ${API_HOSTNAME} ${BUCKET_NS}
