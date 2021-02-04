@@ -18,6 +18,7 @@ var Shoot = DrawableElement.extend({
 
 		this.onAlienHit = options.onAlienHit || function() {};
 
+		console.log("instance_id (event):"+invaders.instance_id);
                 EventHandler.addEvent({ "game_id": 5, "instance_id": invaders.instance_id, "user_id": window.name, "score": invaders.ship.getScore(), "level": invaders.level, "x": this.position.x, "y": this.position.y, "state" : "SHOT_FIRED" });
 	},
 	build: function(){

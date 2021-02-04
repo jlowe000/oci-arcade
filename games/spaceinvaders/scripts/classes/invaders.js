@@ -66,6 +66,7 @@ var Game = Class.extend({
     this.isOnGame = true;
     this.instance_id = window.name + ":" + Date.now();
     this.level = 0;
+    console.log("instance_id (event):"+this.instance_id);
     EventHandler.addEvent({ "game_id": 5, "instance_id": this.instance_id, "user_id": window.name, "state" : "NEW_GAME" });
     // this.gameRun();
   },
@@ -100,6 +101,7 @@ var Game = Class.extend({
 
     // window.particles.init(this.ctx, { x1: mapMargin, y1: mapHeight, x2: mapWidth, y2: mapHeight });
     this.level = level + 1;
+    console.log("instance_id (event):"+this.instance_id);
     EventHandler.addEvent({ "game_id": 5, "instance_id": this.instance_id, "user_id": window.name, "score": this.ship.getScore(), "level": this.level, "state" : "NEW_LEVEL" });
     this.ship.invasion = this.invasion;
     this.currentDir = [];
@@ -110,6 +112,7 @@ var Game = Class.extend({
   resetLife : function() {
     var self = this;
 
+    console.log("instance_id (event):"+this.instance_id);
     EventHandler.addEvent({ "game_id": 5, "instance_id": this.instance_id, "user_id": window.name, "score": this.ship.getScore(), "level": this.level, "x": this.ship.pos().x, "y": this.ship.pos().y, "state" : "DIED" });
     if (this.lives > 0) {
         this.lives = this.lives - 1;
@@ -121,6 +124,7 @@ var Game = Class.extend({
     } else {
         this.isOnGame = false;
         console.log('game score = '+this.ship.getScore());
+        console.log("instance_id (event):"+this.instance_id);
         EventHandler.addEvent({ "game_id": 5, "instance_id": this.instance_id, "user_id": window.name, "score": this.ship.getScore(), "level": this.level, "state" : "GAME_OVER" });
         axios.post(SCORE_BASE_URL,{ "game_id": 5, "user_id": window.name, "score": this.ship.getScore() })
         .then(scoreres => {
