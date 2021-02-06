@@ -1,0 +1,1 @@
+docker-compose -f containers/kafka/oci-kafka-compose.yml build

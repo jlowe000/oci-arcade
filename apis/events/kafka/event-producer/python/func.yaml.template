@@ -5,7 +5,8 @@ runtime: python3.7.1
 entrypoint: /python/bin/fdk /function/func.py handler
 memory: 64
 config:
-  BOOTSTRAP_SERVER: 
+  BOOTSTRAP_SERVER: kafka_kafka_1:9092
   API_USER: 
   API_PASSWORD: 
   FN_DOCKER_NETWORKS: arcade_network
+  TOPIC: oci-arcade-events
