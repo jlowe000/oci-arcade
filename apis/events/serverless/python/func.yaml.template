@@ -4,3 +4,8 @@ version: 0.0.8
 runtime: python
 entrypoint: /python/bin/fdk /function/func.py handler
 memory: 64
+config:
+  ORDS_HOSTNAME: 
+  APEX_WORKSPACE: 
+  API_USER: 
+  API_PASSWORD: 
