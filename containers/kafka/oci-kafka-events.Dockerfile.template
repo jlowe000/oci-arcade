@@ -2,6 +2,12 @@ FROM oraclelinux:7-slim
 
 ARG release=19
 ARG update=8
+ARG ORDS_HOSTNAME
+ARG APEX_WORKSPACE=ociarcade
+ARG API_USER=ociarcade
+ARG API_PASSWORD
+ENV BOOTSTRAP_SERVER=kafka_kafka_1:9092
+ENV TOPIC=oci-arcade-events
 
 RUN  yum -y install oracle-release-el7 && \
      yum -y install python3 && \
@@ -14,9 +20,11 @@ COPY apis/events/kafka/event-consumer/consumer.py .
 
 RUN pip3 install pykafka requests --user
 
-ENV ORDS_HOSTNAME="hostname"
-ENV APEX_WORKSPACE="workspace"
-ENV API_USER="api_user"
-ENV API_PASSWORD="api_password"
+ENV ORDS_HOSTNAME=$ORDS_HOSTNAME
+ENV APEX_WORKSPACE=$APEX_WORKSPACE
+ENV API_USER=$API_USER
+ENV API_PASSWORD=$API_PASSWORD
+ENV BOOTSTRAP_SERVER=$BOOTSTRAP_SERVER
+ENV TOPIC=$TOPIC
 
 CMD [ "python3", "consumer.py" ]
