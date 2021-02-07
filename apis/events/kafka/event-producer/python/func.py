@@ -16,7 +16,7 @@ TOPIC = os.environ.get('TOPIC')
 def handler(ctx, data: io.BytesIO = None):
     try:
         body = json.loads(data.getvalue())
-        if OSS_USER != None:
+        if OSS_USER != None or OSS_USER != "":
             producer = KafkaProducer(bootstrap_servers=[BOOTSTRAP_SERVER],
                 security_protocol = 'SASL_SSL',
                 sasl_mechanism = 'PLAIN',
