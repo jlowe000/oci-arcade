@@ -13,9 +13,9 @@ API_PASSWORD = os.environ.get('API_PASSWORD')
 BOOTSTRAP_SERVER = os.environ.get('BOOTSTRAP_SERVER')
 TOPIC = os.environ.get('TOPIC')
 
-client = KafkaClient(hosts='kafka_kafka_1:9092')
+client = KafkaClient(hosts=BOOTSTRAP_SERVER)
 print(client.topics)
-topic = client.topics[b'oci-arcade-events']
+topic = client.topics[TOPIC]
 
 consumer = topic.get_simple_consumer(auto_offset_reset=OffsetType.LATEST,reset_offset_on_start=True)
 for msg in consumer:
