@@ -6,8 +6,8 @@ ARG ORDS_HOSTNAME
 ARG APEX_WORKSPACE=ociarcade
 ARG API_USER=ociarcade
 ARG API_PASSWORD
-ENV BOOTSTRAP_SERVER=kafka_kafka_1:9092
-ENV TOPIC=oci-arcade-events
+ARG BOOTSTRAP_SERVER=kafka_kafka_1:9092
+ARG TOPIC=oci-arcade-events
 
 RUN  yum -y install oracle-release-el7 && \
      yum -y install python3 && \
