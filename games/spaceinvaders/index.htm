@@ -45,22 +45,34 @@
                 return;
             }
             window.name = user;
+            var pubType = document.getElementById("pubtype").value;
+            console.log(pubType)
+            sessionStorage.setItem("pubtype", pubType);
             window.location.href = "start.html";
         }
 
     </script>
 
-    <body style="padding: 8px;" bgcolor="black" onload="checkName()">
-        <div style="width: 500px; height: 152px; border: 4px solid #FFF; border-radius: 8px; margin-left: auto; margin-right: auto;">
+    <body" style="padding: 8px;" bgcolor="black" onload="checkName()">
+        <div style="width: 600px; height: 222px; border: 4px solid #FFF; border-radius: 8px; margin-left: auto; margin-right: auto;">
         <center>
             <h3 style="color:white;">OCI Arcade - Welcome \o/</h3>
+            <br/>
         </center>
         <center>
-            <h3 style="color:white;">Enter your Name:</h3>
-            <input style="font-size: 16px; font-family: ArcadeR; background-color:black; color:white;" maxlength="3" size="3" type="text" id="user" value="" onkeyup="enter(event)" />
-            <input type="button" style="border-radius: 4px; background-color: #FFF; color: #000; font-size: 16px; font-family: ArcadeR;" value="Play" onclick="play()" />
+            <span style="color:white;">Enter your Name:</span><input style="font-size: 16px; font-family: ArcadeR; background-color:black; color:white; " maxlength="3" size="3" type="text" id="user" value="" onkeyup="enter(event)" /><br/><br/>
+        </center>
+        <center>
+            <span style="color:white;">Event Delivery:</span>
+            <select style="font-size: 16px; font-family: ArcadeR; background-color:black; color:white; padding:4px; border-color:black;" type="text" id="pubtype" value="">
+                <option value="publishevent">Via Kafka</option>
+                <option value="serverless">Via Serverless</option>
+                <option value="none">No Events</option>
+            </select><br/><br/>
+        </center>
+        <center>
+            <input type="button" style="border-radius: 4px; background-color: #FFF; color: #000; font-size: 16px; font-family: ArcadeR; padding: 4px;" value="Play" onclick="play()" />
         </center>
         </div>
     </body>
-
 </html>
