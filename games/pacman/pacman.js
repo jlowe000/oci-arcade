@@ -11301,10 +11301,12 @@ var overState = (function() {
 })();
 
 // const EVENT_BASE_URL = 'https://'+API_HOSTNAME+':8081/event/publishevent';
-const EVENT_BASE_URL = 'https://'+API_HOSTNAME+':8081/event/serverless';
+window.pubType = sessionStorage.getItem("pubtype");
+var EVENT_BASE_URL = 'https://'+API_HOSTNAME+':8081/event/'+window.pubType;
 
 async function addEvent(input) {
-   if (practiceMode == false) {
+   console.log(input+":"+window.pubType);
+   if (practiceMode == false && window.pubType !== "none") {
        console.log("instance_id (event):"+instance_id);
        return await axios.post(EVENT_BASE_URL,input);
    }
