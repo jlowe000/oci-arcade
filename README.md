@@ -40,28 +40,28 @@ This is a rought set of notes to get this up and running.
 1. Create 2 compute instances in the public subnet (for the purposes of this README - one will be referred to as arcade-web and the other as arcade-kafka)
 1. Create an object storage bucket that is public
 1. On arcade-web:
-  1. Install git, docker, docker-compose, pip, Oracle Cloud CLI, Oracle Instant Client
-  1. Update the firewall with 8080/tcp, 8081/tcp, 2377/tcp, 4789/ucp, 7946/tcp, 7946/udp
-  1. Create a docker-swarm manager (with arcade-kafka as the worker)
-  1. Create an attachable and overlay "swarm" network called arcade_network
-  1. Create an oracle user
+    1. Install git, docker, docker-compose, pip, Oracle Cloud CLI, Oracle Instant Client
+    1. Update the firewall with 8080/tcp, 8081/tcp, 2377/tcp, 4789/ucp, 7946/tcp, 7946/udp
+    1. Create a docker-swarm manager (with arcade-kafka as the worker)
+    1. Create an attachable and overlay "swarm" network called arcade_network
+    1. Create an oracle user
 1. On arcade-kafka:
-  1. More to come ... 
+    1. More to come ... 
 1. On arcade-kafka (as user):
-  1. More to come ... 
+    1. More to come ... 
 1. On arcade-web (as user):
-  1. Create a keys for the OCI API Signing Keys.
-  1. Configure OCI CLI with a profile to point to your tenancy
-  1. Download the ADW wallet and configure.
-  1. Install Oracle FN project.
-  1. Create a database user and run the following scripts.
-    - infra/db/init.sql
-    - apis/score/db/init.sql
-    - apis/events/db/init.sql
-  1. Create a dockerfile from containers/web/api-score.Dockerfile.template
-  1. Create a new FN context with the FN_API_URL pointing to the port 8082
-  1. Start FN server on arcade_network with the port 8082
-  1. More to come ... 
+    1. Create a keys for the OCI API Signing Keys.
+    1. Configure OCI CLI with a profile to point to your tenancy
+    1. Download the ADW wallet and configure.
+    1. Install Oracle FN project.
+    1. Create a database user and run the following scripts.
+        - infra/db/init.sql
+        - apis/score/db/init.sql
+        - apis/events/db/init.sql
+    1. Create a dockerfile from containers/web/api-score.Dockerfile.template
+    1. Create a new FN context with the FN_API_URL pointing to the port 8082
+    1. Start FN server on arcade_network with the port 8082
+    1. More to come ... 
 
 (I'm reverse engineering these steps from the Terraform project).
 
