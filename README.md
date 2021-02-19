@@ -71,3 +71,4 @@ This is a rought set of notes to get this up and running.
     - There can only be 2 x VM instances and 2 x Autonomous Database instances.
   - Need to "accept" exception in browser for the API calls (https://<compute-public-ip>:8081/event) - Without this step, API calls from game will fail with CERT exception
   - If you are wanting to "Destroy" the stack, you need to delete the folders in the oci-arcade bucket before running the Terraform destroy activity. Otherwise, the bucket will fail to be destroyed. You can delete the folders which will delete the underlying objects.
+  - I've tested this with 7.8 however on 7.9-2021.01.12-0 I had issues with memory consumption.
