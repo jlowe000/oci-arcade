@@ -65,6 +65,7 @@ var DEBUG = false;
 //@line 1 "src/sound.js"
 /* Sound handlers added by Dr James Freeman who was sad such a great reverse was a silent movie  */
 
+window.sound = sessionStorage.getItem("sound");
 var audio = new preloadAudio();
 
 function audioTrack(url, volume) {
@@ -104,13 +105,15 @@ function audioTrack(url, volume) {
             audio.pause();
             if (!noResetTime ) audio.currentTime = 0;
         }
-        try{
-            var playPromise = audio.play();
-            if(playPromise) {
-                playPromise.then(function(){}).catch(function(err){});
-            }
-        } 
-        catch(err){ console.error(err) }
+        if(window.sound == "true") {
+			try{
+				var playPromise = audio.play();
+				if(playPromise) {
+					playPromise.then(function(){}).catch(function(err){});
+				}
+			} 
+			catch(err){ console.error(err) }
+		}
     }
 }
 
@@ -11269,7 +11272,7 @@ var finishState = (function(){
 // Game Over state
 // (state when player has lost last life)
 
-const SCORE_BASE_URL = 'https://'+API_HOSTNAME+':8081/score';
+const SCORE_BASE_URL = 'https://'+API_HOSTNAME+'/score';
 
 var overState = (function() {
     var frames;
@@ -11302,7 +11305,7 @@ var overState = (function() {
 
 // const EVENT_BASE_URL = 'https://'+API_HOSTNAME+':8081/event/publishevent';
 window.pubType = sessionStorage.getItem("pubtype");
-var EVENT_BASE_URL = 'https://'+API_HOSTNAME+':8081/event/'+window.pubType;
+var EVENT_BASE_URL = 'https://'+API_HOSTNAME+'/event/'+window.pubType;
 
 async function addEvent(input) {
    console.log(input+":"+window.pubType);

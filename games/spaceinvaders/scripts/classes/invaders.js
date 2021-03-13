@@ -3,7 +3,7 @@
  */
 
 // const SCORE_BASE_URL = 'http://'+window.location.hostname+':8081/score';
-const SCORE_BASE_URL = 'https://'+API_HOSTNAME+':8081/score';
+const SCORE_BASE_URL = 'https://'+API_HOSTNAME+'/score';
 
 var Game = Class.extend({
   init : function(options) {

@@ -1,5 +1,5 @@
 window.pubType = sessionStorage.getItem("pubtype");
-var EVENT_BASE_URL = 'https://'+API_HOSTNAME+':8081/event/'+window.pubType;
+var EVENT_BASE_URL = 'https://'+API_HOSTNAME+'/event/'+window.pubType;
 
 var EventHandler = (function() {
     return {
