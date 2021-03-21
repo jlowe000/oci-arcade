@@ -3,6 +3,7 @@
 const axios = require('axios');
 const cors = require('cors')
 const express = require('express');
+const { Session, Options, Processors } = require('@oracle/coherence')
 
 // Constants
 const SSL_PORT = 8081;
@@ -35,6 +36,9 @@ function getToken() {
 getToken();
 setInterval(getToken, token_refresh_interval);
 
+const opts = new Options()
+opts.address = 'oci-cache:1408'
+
 // App
 const app = express();
 
@@ -46,6 +50,22 @@ app.use(cors());
 
 app.get('/', (req, res) => {
   res.send('Hello World');
+});
+
+app.get('/id', (req, res) => {
+  var game_id = req.query.game_id;
+  var session = new Session(opts)
+  var map = session.getMap("oci-id")
+  setImmediate(async () => {
+    console.log("Map size is " + (await map.size))
+    if ((await map.has(game_id)) == false) {
+      await map.set(game_id, { id : 1 })
+      res.send('{ "id" : 1 }');
+    } else {
+      res.send('{ "id" : '+(await map.invoke(game_id,Processors.increment('id',1)))+' }')
+    }
+    await session.close()
+  })
 });
 
 app.get('/score', (req, res) => {
