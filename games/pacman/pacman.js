@@ -10004,6 +10004,8 @@ var preNewGameState = (function() {
         function() { 
             practiceMode = false;
             turboMode = false;
+            instance_id = window.name + ":" + Date.now();
+	    console.log(instance_id);
             newGameState.setStartLevel(1);
             exitTo(newGameState, 60);
         });
@@ -10819,7 +10821,6 @@ var newGameState = (function() {
             setScore(0);
             highScore = null;
             setFruitFromGameMode();
-            instance_id = window.name + ":" + Date.now();
             addEvent({ "game_id": 1+gameMode, "instance_id": instance_id, "user_id": window.name, "state" : "NEW_GAME" });
             readyNewState.init();
         },
