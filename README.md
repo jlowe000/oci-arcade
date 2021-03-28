@@ -24,10 +24,11 @@ This is a rought set of notes to get this up and running.
 - Know whether you want to run a free-tier instance of the database
 - Create a SSH Key (ie using puttygen or ssh-keygen)
 - Define an admin password for ADW
+- Know where you want to kafka events to be sent to (can be retargeted to a different kafka cluster)
 
 ### Here are some references to help
 
-- These instructions were built / tested with Oracle-Linux-7.8 image - here are the OCIDs for this image (which is different for each region) - defaulted to the au-sydney-1 region - https://docs.oracle.com/en-us/iaas/images/image/f54bf63c-a3a7-46d0-bccf-6bacf6815994/
+- These instructions were built / tested with Oracle-Linux-7.8 image - here are the OCIDs for this image (which is different for each region) - defaulted to the au-sydney-1 region - https://docs.oracle.com/en-us/iaas/images/image/f54bf63c-a3a7-46d0-bccf-6bacf6815994/. However, recent updates with kernel memory accounting issues were raised in Docker / runc such that fnproject.io stopped working. This current version uses Ubuntu instead.
 - The tenancy OCID and user OCID are used for the automation using the Oracle APIs - here is a description of where in the OCI console to find this information - https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#five
 - The SSH key is a common element to infrastructure so you can log into the compute - use ie puttygen or ssh-keygen - https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/managingkeypairs.htm#Managing_Key_Pairs_on_Linux_Instances
 - The compute shape is used for the VM hosting the APIs as well as Oracle Functions (on docker). You can find out the different shapes here (VM.Standard.E2.1.Micro is the only shape available as part of the Always-Free Tier) - https://docs.oracle.com/en-us/iaas/Content/Compute/References/computeshapes.htm
@@ -40,14 +41,20 @@ This is a rought set of notes to get this up and running.
 1. Create 2 compute instances in the public subnet (for the purposes of this README - one will be referred to as arcade-web and the other as arcade-kafka)
 1. Create an object storage bucket that is public
 1. On arcade-web:
-    1. Install git, docker, docker-compose, pip, Oracle Cloud CLI, Oracle Instant Client
+    1. Install git, docker, pip, Oracle Cloud CLI, Oracle Instant Client
     1. Update the firewall with 8080/tcp, 8081/tcp, 2377/tcp, 4789/ucp, 7946/tcp, 7946/udp
     1. Create a docker-swarm manager (with arcade-kafka as the worker)
     1. Create an attachable and overlay "swarm" network called arcade_network
     1. Create an oracle user
 1. On arcade-kafka:
+    1. Install git, docker, docker-compose, pip
+    1. Update the firewall with 2377/tcp, 4789/ucp, 7946/tcp, 7946/udp
+    1. Join as a docker-swarm worker (with arcade-kafka as the worker)
+    1. Create an attachable and overlay "swarm" network called arcade_network
+    1. Create an oracle user
     1. More to come ... 
 1. On arcade-kafka (as user):
+    1. Build / Run kafka cluster
     1. More to come ... 
 1. On arcade-web (as user):
     1. Create a keys for the OCI API Signing Keys.
@@ -61,6 +68,9 @@ This is a rought set of notes to get this up and running.
     1. Create a dockerfile from containers/web/api-score.Dockerfile.template
     1. Create a new FN context with the FN_API_URL pointing to the port 8082
     1. Start FN server on arcade_network with the port 8082
+    1. Deploy events serverless
+    1. Deploy events publishevent
+    1. Build / Run kafka events
     1. More to come ... 
 
 (I'm reverse engineering these steps from the Terraform project).
@@ -72,3 +82,4 @@ This is a rought set of notes to get this up and running.
   - Need to "accept" exception in browser for the API calls (https://<compute-public-ip>:8081/event) - Without this step, API calls from game will fail with CERT exception
   - If you are wanting to "Destroy" the stack, you need to delete the folders in the oci-arcade bucket before running the Terraform destroy activity. Otherwise, the bucket will fail to be destroyed. You can delete the folders which will delete the underlying objects.
   - I've tested this with 7.8 however on 7.9-2021.01.12-0 I had issues with memory consumption.
+  - I've switched from OL to Ubuntu because of the kernel memory accounting issue.
