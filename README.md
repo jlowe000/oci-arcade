@@ -71,6 +71,7 @@ This is a rought set of notes to get this up and running.
     1. Deploy events serverless
     1. Deploy events publishevent
     1. Build / Run kafka events
+    3. Upload games to object storage (if user api-key is enabled)
     1. More to come ... 
 
 (I'm reverse engineering these steps from the Terraform project).
