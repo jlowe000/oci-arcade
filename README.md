@@ -28,7 +28,7 @@ This is a rought set of notes to get this up and running.
 
 ### Here are some references to help
 
-- These instructions were built / tested with Oracle-Linux-7.8 image - here are the OCIDs for this image (which is different for each region) - defaulted to the au-sydney-1 region - https://docs.oracle.com/en-us/iaas/images/image/f54bf63c-a3a7-46d0-bccf-6bacf6815994/. However, recent updates with kernel memory accounting issues were raised in Docker / runc such that fnproject.io stopped working. This current version uses Ubuntu instead.
+- These instructions were built / tested with Oracle-Linux-7.8 image - here are the OCIDs for this image (which is different for each region) - defaulted to the au-sydney-1 region - https://docs.oracle.com/en-us/iaas/images/image/f54bf63c-a3a7-46d0-bccf-6bacf6815994/.
 - The tenancy OCID and user OCID are used for the automation using the Oracle APIs - here is a description of where in the OCI console to find this information - https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#five
 - The SSH key is a common element to infrastructure so you can log into the compute - use ie puttygen or ssh-keygen - https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/managingkeypairs.htm#Managing_Key_Pairs_on_Linux_Instances
 - The compute shape is used for the VM hosting the APIs as well as Oracle Functions (on docker). You can find out the different shapes here (VM.Standard.E2.1.Micro is the only shape available as part of the Always-Free Tier) - https://docs.oracle.com/en-us/iaas/Content/Compute/References/computeshapes.htm
@@ -82,5 +82,3 @@ This is a rought set of notes to get this up and running.
     - There can only be 2 x VM instances and 2 x Autonomous Database instances.
   - Need to "accept" exception in browser for the API calls (https://<compute-public-ip>:8081/event) - Without this step, API calls from game will fail with CERT exception
   - If you are wanting to "Destroy" the stack, you need to delete the folders in the oci-arcade bucket before running the Terraform destroy activity. Otherwise, the bucket will fail to be destroyed. You can delete the folders which will delete the underlying objects.
-  - I've tested this with 7.8 however on 7.9-2021.01.12-0 I had issues with memory consumption.
-  - I've switched from OL to Ubuntu because of the kernel memory accounting issue.
