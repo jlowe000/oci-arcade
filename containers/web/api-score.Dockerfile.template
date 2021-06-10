@@ -1,4 +1,4 @@
-FROM oraclelinux:7-slim
+FROM node:stretch-slim
 
 ARG release=19
 ARG update=8
@@ -7,13 +7,6 @@ ARG APEX_WORKSPACE=ociarcade
 ARG API_USER=ociarcade
 ARG API_PASSWORD
 ARG CERT_PASSWORD
-
-RUN  yum -y install oracle-release-el7 && \
-     yum -y install curl 
-
-RUN  curl -sL https://rpm.nodesource.com/setup_14.x | bash && \
-     yum -y install nodejs && \
-     rm -rf /var/cache/yum
 
 # Create keys directory
 WORKDIR /root/keys
