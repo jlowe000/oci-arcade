@@ -13,10 +13,10 @@ This is a rought set of notes to get this up and running.
 
 There's a number of branches that exist
 
-- master - the main one but it is "dated" because of the consistency of the branches moving forward being the separate version of what it takes. the master is here as the base of the game itself so adding new games and then distributing them through to the other branches.
-- kafka - kafka implementation to demonstrate streaming events
-- kafka-arm64 - a version of the kafka implementation on arm64 (A1.Flex shape)
-- coherence-ce - coherence-ce implementation to demonstrate in-memory data grid
+- master - the main one but it is "dated" because of the consistency of the branches moving forward being the separate version of what it takes. the master is here as the base of the game itself so adding new games and then distributing them through to the other branches. (using 2 x E2.1.Micro x86-64 VMs)
+- kafka - kafka implementation to demonstrate streaming events. (using 2 x E2.1.Micro x86-64 VMs)
+- kafka-arm64 - a version of the kafka implementation on arm64. (using 1 x A1.Flex arm64 VM)
+- coherence-ce - coherence-ce implementation to demonstrate in-memory data grid. (using 2 x E2.1.Micro x86-64 VMs)
 
 ## Pre-Requisites
 
