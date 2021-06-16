@@ -11,7 +11,7 @@ This is a rought set of notes to get this up and running.
 
 ## Branches
 
-There's a number of branches that exist
+There's a number of branches that exist for the purposes of terraform using https://github.com/jlowe000/oci-arcade-tf.
 
 - master - the main one but it is "dated" because of the consistency of the branches moving forward being the separate version of what it takes. the master is here as the base of the game itself so adding new games and then distributing them through to the other branches. (using 2 x E2.1.Micro x86-64 VMs)
 - kafka - kafka implementation to demonstrate streaming events. (using 2 x E2.1.Micro x86-64 VMs)
