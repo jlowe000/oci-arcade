@@ -28,10 +28,12 @@ This is a rought set of notes to get this up and running.
 
 ### Here are some references to help
 
-- These instructions were built / tested with Oracle-Linux-7.8 image - here are the OCIDs for this image (which is different for each region) - defaulted to the au-sydney-1 region - https://docs.oracle.com/en-us/iaas/images/image/f54bf63c-a3a7-46d0-bccf-6bacf6815994/.
+- These instructions were originally built / tested with Oracle-Linux-7.8 image. Further testing has been conducted with:
+  - Oracle-Linux-7.9
+  - Canonical-Ubuntu-20.04
 - The tenancy OCID and user OCID are used for the automation using the Oracle APIs - here is a description of where in the OCI console to find this information - https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#five
 - The SSH key is a common element to infrastructure so you can log into the compute - use ie puttygen or ssh-keygen - https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/managingkeypairs.htm#Managing_Key_Pairs_on_Linux_Instances
-- The compute shape is used for the VM hosting the APIs as well as Oracle Functions (on docker). You can find out the different shapes here (VM.Standard.E2.1.Micro is the only shape available as part of the Always-Free Tier) - https://docs.oracle.com/en-us/iaas/Content/Compute/References/computeshapes.htm
+- The compute shape is used for the VM hosting the APIs as well as Oracle Functions (on docker). You can find out the different shapes here (VM.Standard.E2.1.Micro + VM.Standard.A1.Flex are the only shapes available as part of the Always-Free Tier) - https://docs.oracle.com/en-us/iaas/Content/Compute/References/computeshapes.htm
 - Oracle FN project is used for some of the APIs - Download and learn about it here - https://fnproject.io/
 
 ## 2. Start Provisioning ...
