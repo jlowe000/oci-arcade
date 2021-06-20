@@ -28,51 +28,52 @@ This is a rought set of notes to get this up and running.
 
 ### Here are some references to help
 
-- These instructions were built / tested with Oracle-Linux-7.8 image - here are the OCIDs for this image (which is different for each region) - defaulted to the au-sydney-1 region - https://docs.oracle.com/en-us/iaas/images/image/f54bf63c-a3a7-46d0-bccf-6bacf6815994/.
+- These instructions were originally built / tested with Oracle-Linux-7.8 image. Further testing has been conducted with:
+  - Oracle-Linux-7.9
+  - Canonical-Ubuntu-20.04
 - The tenancy OCID and user OCID are used for the automation using the Oracle APIs - here is a description of where in the OCI console to find this information - https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#five
 - The SSH key is a common element to infrastructure so you can log into the compute - use ie puttygen or ssh-keygen - https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/managingkeypairs.htm#Managing_Key_Pairs_on_Linux_Instances
-- The compute shape is used for the VM hosting the APIs as well as Oracle Functions (on docker). You can find out the different shapes here (VM.Standard.E2.1.Micro is the only shape available as part of the Always-Free Tier) - https://docs.oracle.com/en-us/iaas/Content/Compute/References/computeshapes.htm
+- The compute shape is used for the VM hosting the APIs as well as Oracle Functions (on docker). You can find out the different shapes here (VM.Standard.E2.1.Micro + VM.Standard.A1.Flex are the only shapes available as part of the Always-Free Tier) - https://docs.oracle.com/en-us/iaas/Content/Compute/References/computeshapes.htm
 - Oracle FN project is used for some of the APIs - Download and learn about it here - https://fnproject.io/
 
 ## 2. Start Provisioning ...
 
 1. Create a VCN with a public subnet
 1. Create an ADW instance
-1. Create 2 compute instances in the public subnet (for the purposes of this README - one will be referred to as arcade-web and the other as arcade-kafka)
+1. Create 1 A1.Flex compute instance in the public subnet (for the purposes of this README - one will be referred to as arcade-web)
 1. Create an object storage bucket that is public
 1. On arcade-web:
-    1. Install git, docker, pip, Oracle Cloud CLI, Oracle Instant Client
-    1. Update the firewall with 8080/tcp, 8081/tcp, 2377/tcp, 4789/ucp, 7946/tcp, 7946/udp
-    1. Create a docker-swarm manager (with arcade-kafka as the worker)
-    1. Create an attachable and overlay "swarm" network called arcade_network
+    1. Install git, docker, docker-compose, pip, Oracle Cloud CLI, Oracle Instant Client
+    1. Update the firewall with 8080/tcp, 8081/tcp
+    1. Create an overlay network called arcade_network
     1. Create an oracle user
-1. On arcade-kafka:
-    1. Install git, docker, docker-compose, pip
-    1. Update the firewall with 2377/tcp, 4789/ucp, 7946/tcp, 7946/udp
-    1. Join as a docker-swarm worker (with arcade-kafka as the worker)
-    1. Create an attachable and overlay "swarm" network called arcade_network
-    1. Create an oracle user
-    1. More to come ... 
-1. On arcade-kafka (as user):
-    1. Build / Run kafka cluster
     1. More to come ... 
 1. On arcade-web (as user):
+    1. Build / Run kafka cluster
     1. Create a keys for the OCI API Signing Keys.
     1. Configure OCI CLI with a profile to point to your tenancy
     1. Download the ADW wallet and configure.
     1. Install Oracle FN project.
-    1. Create a database user and run the following scripts.
+        - Additional steps required to build this from the repositories.
+        - git clone https://github.com/fnproject/fn
+        - git clone https://github.com/fnproject/cli
+        - git clone https://github.com/fnproject/fdk-go
+        - git clone https://github.com/fnproject/fdk-python
+        - git clone https://github.com/fnproject/fdk-node
+        - @TODO document specifically what is required. Referred git repos that need to be built.
+    3. Create a database user and run the following scripts.
         - infra/db/init.sql
         - apis/score/db/init.sql
         - apis/events/db/init.sql
-    1. Create a dockerfile from containers/web/api-score.Dockerfile.template
-    1. Create a new FN context with the FN_API_URL pointing to the port 8082
-    1. Start FN server on arcade_network with the port 8082
-    1. Deploy events serverless
-    1. Deploy events publishevent
-    1. Build / Run kafka events
-    3. Upload games to object storage (if user api-key is enabled)
-    1. More to come ... 
+    4. Create a dockerfile from containers/web/api-score.Dockerfile.template
+    5. Create a new FN context with the FN_API_URL pointing to the port 8082
+    6. Start FN server on arcade_network with the port 8082
+    7. Deploy events serverless
+    8. Deploy events publishevent
+    9. Build / Run kafka events
+    10. Build and Run api-score NodeJS server
+    11. Upload games to object storage (if user api-key is enabled)
+    12. More to come ... 
 
 (I'm reverse engineering these steps from the Terraform project).
 
