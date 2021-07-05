@@ -9685,6 +9685,7 @@ var homeState = (function(){
 
     return {
         init: function() {
+            instance_id = getInstanceId();
             menu.enable();
             audio.coffeeBreakMusic.startLoop();
         },
@@ -10004,7 +10005,7 @@ var preNewGameState = (function() {
         function() { 
             practiceMode = false;
             turboMode = false;
-            instance_id = window.name + ":" + Date.now();
+            // instance_id = window.name + ":" + Date.now();
 	    console.log(instance_id);
             newGameState.setStartLevel(1);
             exitTo(newGameState, 60);
@@ -11309,11 +11310,26 @@ window.pubType = sessionStorage.getItem("pubtype");
 var EVENT_BASE_URL = 'https://'+API_HOSTNAME+'/event/'+window.pubType;
 
 async function addEvent(input) {
-   console.log(input+":"+window.pubType);
+   console.log(input.state+":"+input+":"+window.pubType);
    if (practiceMode == false && window.pubType !== "none") {
        console.log("instance_id (event):"+instance_id);
        return await axios.post(EVENT_BASE_URL,input);
    }
+}
+
+var ID_BASE_URL = 'https://'+API_HOSTNAME+'/id';
+async function getInstanceId() {
+    axios.get(ID_BASE_URL+'?game_id=1')
+    .then(idres => {
+        id = idres.data.id;
+        console.log(id);
+	instance_id = window.name + ":" + id.toString().padStart(13,'0');
+        // instance_id = window.name + ":" + Date.now().toString().padStart(13,'0');
+    })
+    .catch(err => {
+        console.log(err);
+        instance_id = window.name + ":" + Date.now().toString().padStart(13,'0');
+    })
 }
 
 //@line 1 "src/input.js"
