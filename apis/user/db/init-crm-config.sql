@@ -19,6 +19,7 @@ declare
     P82_HEIGHT number := 1;
     P81_HELP_TEXT varchar(32) := NULL;
 begin
+    apex_util.set_workspace ('OCIARCADE');
     select application_id into id
     from apex_applications
     where application_name = 'Customer Tracker'
