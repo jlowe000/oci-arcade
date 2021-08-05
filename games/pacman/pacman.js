@@ -11273,8 +11273,9 @@ var finishState = (function(){
 ////////////////////////////////////////////////////
 // Game Over state
 // (state when player has lost last life)
-
+window.fullname = sessionStorage.getItem("fullname");
 const SCORE_BASE_URL = 'https://'+API_HOSTNAME+'/score';
+const CRM_BASE_URL = 'https://'+API_HOSTNAME+'/activities/';
 
 var overState = (function() {
     var frames;
@@ -11285,6 +11286,13 @@ var overState = (function() {
 	    axios.post(SCORE_BASE_URL,{ "game_id": 1+gameMode, "user_id": window.name, "score": getScore() })
               .then(scoreres => {
                 console.log(scoreres);
+              })
+              .catch(err => {
+                console.log(err);
+              })
+	    axios.post(CRM_BASE_URL,{ "name" : window.fullname, "notes" : "{ \"game_id\": "+(1+gameMode)+", \"user_id\": "+(window.name)+", \"score\": "+getScore()+" }" })
+              .then(crmres => {
+                console.log(crmres);
               })
               .catch(err => {
                 console.log(err);

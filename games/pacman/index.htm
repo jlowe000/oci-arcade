@@ -18,11 +18,9 @@
         }
     </style>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <!-- script src="api_hostname.js"></script -->
+    <script src="api_hostname.js"></script>
     <script>
-	const API_HOSTNAME = '140.238.196.66:8081';
 	const CRM_BASE_URL = 'https://'+API_HOSTNAME+'/users';
-	// const CRM_BASE_URL = 'https://wtxzo14qclsh24u-arcade.adb.ap-sydney-1.oraclecloudapps.com/ords/ociarcade/crm/users/';
 
         function upsertCRMName(name,id) {
             axios.get(CRM_BASE_URL+'/'+name)
@@ -88,6 +86,7 @@
 
         function play() {
             var user = document.getElementById("user").value;
+            var name = document.getElementById("name").value;
             window.name = user;
             console.log(user.length)
             console.log(user)
@@ -97,6 +96,7 @@
             var sound = document.getElementById("sound").value;
             console.log(sound)
             sessionStorage.setItem("sound", sound);
+            sessionStorage.setItem("fullname", name);
             document.getElementById("error").innerHTML = 'Cannot find name in CRM.';
             window.location.href = "start.htm";
         }

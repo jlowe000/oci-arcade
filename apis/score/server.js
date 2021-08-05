@@ -91,6 +91,51 @@ app.post('/score', (req, res) => {
   });
 });
 
+app.get('/users/:name', (req, res) => {
+  let name = req.params.name;
+  axios.get('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/crm/users/'+name, { headers: { 'Authorization': 'Bearer '+access_token }})
+  .then(adwres => {
+        res.send(adwres.data);
+    })
+  .catch(err => {
+        console.log(err);
+        res.send('{ "response" : "bad" }');
+    });
+});
+
+app.put('/users/:name', (req, res) => {
+  axios.post('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/crm/users/'+name, req.body, { headers: { 'Authorization': 'Bearer '+access_token }})
+  .then(adwres => {
+        res.send(adwres.data);
+    })
+  .catch(err => {
+        console.log(err);
+        res.send('{ "response" : "bad" }');
+    });
+});
+
+app.post('/users', (req, res) => {
+  axios.post('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/crm/users/', req.body, { headers: { 'Authorization': 'Bearer '+access_token }})
+  .then(adwres => {
+        res.send(adwres.data);
+    })
+  .catch(err => {
+        console.log(err);
+        res.send('{ "response" : "bad" }');
+    });
+});
+
+app.post('/activities', (req, res) => {
+  axios.post('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/crm/activities/', req.body, { headers: { 'Authorization': 'Bearer '+access_token }})
+  .then(adwres => {
+        res.send(adwres.data);
+    })
+  .catch(err => {
+        console.log(err);
+        res.send('{ "response" : "bad" }');
+    });
+});
+
 app.post('/event/:action', (req, res) => {
   let fn_id = event_fns[req.params.action];
   console.log('action:',req.params.action);
