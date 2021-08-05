@@ -104,7 +104,8 @@ app.get('/users/:name', (req, res) => {
 });
 
 app.put('/users/:name', (req, res) => {
-  axios.post('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/crm/users/'+name, req.body, { headers: { 'Authorization': 'Bearer '+access_token }})
+  let name = req.params.name;
+  axios.put('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/crm/users/'+name, req.body, { headers: { 'Authorization': 'Bearer '+access_token }})
   .then(adwres => {
         res.send(adwres.data);
     })
