@@ -11290,7 +11290,7 @@ var overState = (function() {
               .catch(err => {
                 console.log(err);
               })
-	    axios.post(CRM_BASE_URL,{ "name" : window.fullname, "notes" : "{ \"game_id\": "+(1+gameMode)+", \"user_id\": "+(window.name)+", \"score\": "+getScore()+" }" })
+	    axios.post(CRM_BASE_URL,{ "name" : window.fullname, "notes" : "{ \"timestamp\" : \""+Date.now().toString()+"\" \"game_id\": "+(1+gameMode)+", \"user_id\": \""+(window.name)+"\", \"score\": "+getScore()+" }" })
               .then(crmres => {
                 console.log(crmres);
               })
