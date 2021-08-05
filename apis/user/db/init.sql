@@ -19,6 +19,40 @@ BEGIN
       p_comments       => NULL);
 
   ORDS.DEFINE_TEMPLATE(
+	      p_module_name    => 'CRM',
+	      p_pattern        => 'activities/',
+	      p_priority       => 0,
+	      p_etag_type      => 'HASH',
+	      p_etag_query     => NULL,
+	      p_comments       => NULL);
+
+  ORDS.DEFINE_HANDLER(
+	      p_module_name    => 'CRM',
+	      p_pattern        => 'activities/',
+	      p_method         => 'GET',
+	      p_source_type    => 'json/collection',
+	      p_mimes_allowed  => '',
+	      p_comments       => NULL,
+	      p_source         => 
+	'SELECT *
+	FROM EBA_CUST_ACTIVITY_REF');
+
+  ORDS.DEFINE_HANDLER(
+	      p_module_name    => 'CRM',
+	      p_pattern        => 'activities/',
+	      p_method         => 'POST',
+	      p_source_type    => 'plsql/block',
+	      p_mimes_allowed  => '',
+	      p_comments       => NULL,
+	      p_source         => 
+	'INSERT INTO EBA_CUST_ACTIVITY_REF (CUSTOMER_ID, CONTACT_ID, ACTIVITY_ID, ACTIVITY_DATE, NOTES)
+	SELECT CUSTOMER.ID, CONTACT.ID, ACTIVITY.ID, SYSDATE, :notes
+	FROM EBA_CUST_CUSTOMERS CUSTOMER, EBA_CUST_CONTACTS CONTACT, EBA_CUST_ACTIVITIES ACTIVITY
+	WHERE CUSTOMER.CUSTOMER_NAME = ''OCI Arcade''
+	  AND CONTACT.NAME = :name
+	  AND ACTIVITY.NAME = ''Play Pacman''');
+
+  ORDS.DEFINE_TEMPLATE(
       p_module_name    => 'CRM',
       p_pattern        => 'users/',
       p_priority       => 0,
@@ -94,8 +128,7 @@ DECLARE
 BEGIN
   l_priv_roles(1) := 'ociarcade api';
   l_priv_roles(2) := 'SQL Developer';
-  l_priv_patterns(1) := '/metadata-catalog/score_table/*';
-  l_priv_patterns(2) := '/users/*';
+  l_priv_patterns(1) := '/crm/*';
 
   ords.define_privilege(
     p_privilege_name     => 'privilege.OCIARCADE.CRM',
