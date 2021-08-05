@@ -21,7 +21,7 @@ const token_refresh_interval = 1800000;
 let access_token = '';
 
 function getToken() {
-    console.log('retrieve token');
+    // console.log('retrieve token');
     axios.post('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/oauth/token', 'grant_type=client_credentials', { auth: { username: API_USER, password: API_PASSWORD }})
     .then(oauthres => {
         access_token = oauthres.data.access_token;
@@ -53,11 +53,14 @@ app.get('/', (req, res) => {
 });
 
 app.get('/id', (req, res) => {
+  console.log('url: /id?game_id=<value>');
+  console.log('method: get');
+  console.log('game_id:',req.query.game_id);
   var game_id = req.query.game_id;
   var session = new Session(opts)
   var map = session.getMap("oci-id")
   setImmediate(async () => {
-    console.log("Map size is " + (await map.size))
+    // console.log("Map size is " + (await map.size))
     if ((await map.has(game_id)) == false) {
       await map.set(game_id, { id : 1 })
       res.send('{ "id" : 1 }');
@@ -69,6 +72,9 @@ app.get('/id', (req, res) => {
 });
 
 app.get('/score', (req, res) => {
+  console.log('url: /score?game_id=<value>');
+  console.log('method: get');
+  console.log('game_id:',req.query.game_id);
   let game_id = req.query.game_id;
   axios.get('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/score_table/?q={"game_id":'+game_id+',"score":{"$notnull": null},"$orderby":{"score":"desc"}}', { headers: { 'Authorization': 'Bearer '+access_token }})
   .then(adwres => {
@@ -81,6 +87,9 @@ app.get('/score', (req, res) => {
 });
 
 app.post('/score', (req, res) => {
+  console.log('url: /score');
+  console.log('method: post');
+  console.log('payload:',req.body);
   axios.post('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/score_table/', req.body, { headers: { 'Authorization': 'Bearer '+access_token }})
   .then(adwres => {
     res.send(adwres.data);
@@ -92,6 +101,9 @@ app.post('/score', (req, res) => {
 });
 
 app.get('/users/:name', (req, res) => {
+  console.log('url: /users/:name');
+  console.log('method: get');
+  console.log('name:',req.params.name);
   let name = req.params.name;
   axios.get('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/crm/users/'+name, { headers: { 'Authorization': 'Bearer '+access_token }})
   .then(adwres => {
@@ -104,6 +116,10 @@ app.get('/users/:name', (req, res) => {
 });
 
 app.put('/users/:name', (req, res) => {
+  console.log('url: /users/:name');
+  console.log('method: put');
+  console.log('name:',req.params.name);
+  console.log('payload:',req.body);
   let name = req.params.name;
   axios.put('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/crm/users/'+name, req.body, { headers: { 'Authorization': 'Bearer '+access_token }})
   .then(adwres => {
@@ -116,6 +132,9 @@ app.put('/users/:name', (req, res) => {
 });
 
 app.post('/users', (req, res) => {
+  console.log('url: /users');
+  console.log('method: post');
+  console.log('payload:',req.body);
   axios.post('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/crm/users/', req.body, { headers: { 'Authorization': 'Bearer '+access_token }})
   .then(adwres => {
         res.send(adwres.data);
@@ -127,6 +146,9 @@ app.post('/users', (req, res) => {
 });
 
 app.post('/activities', (req, res) => {
+  console.log('url: /activities');
+  console.log('method: post');
+  console.log('payload:',req.body);
   axios.post('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/crm/activities/', req.body, { headers: { 'Authorization': 'Bearer '+access_token }})
   .then(adwres => {
         res.send(adwres.data);
@@ -138,11 +160,15 @@ app.post('/activities', (req, res) => {
 });
 
 app.post('/event/:action', (req, res) => {
-  let fn_id = event_fns[req.params.action];
+  console.log('url: /event/:action');
+  console.log('method: post');
   console.log('action:',req.params.action);
+  console.log('payload:',req.body);
+  let fn_id = event_fns[req.params.action];
+  // console.log('action:',req.params.action);
   // let fn_id = event_fns['publishevent'];
-  console.log('fn_id:',fn_id);
-  console.log('body:',req.body);
+  // console.log('fn_id:',fn_id);
+  // console.log('body:',req.body);
   axios.post('http://fnserver:8080/invoke/'+fn_id, req.body, {headers: { 'Content-Type': 'application/json'}})
   .then(fnres => {
     res.send(fnres.data);
