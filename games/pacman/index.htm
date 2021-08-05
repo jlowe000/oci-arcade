@@ -58,7 +58,7 @@
 
         function checkName() {
             if (window.name != null | window.name.length > 0) {
-                document.getElementById("user").value = window.name;
+                document.getElementById("user").value = window.name.toUpperCase();
             }
         }
 
@@ -66,7 +66,7 @@
             if (event.which == 13 || event.keyCode == 13) {
                 checkCRM();
             } else {
-                var user = document.getElementById("user").value;
+                var user = document.getElementById("user").value.toUpperCase();
                 user = user.toUpperCase();
                 console.log(user.length)
                 console.log(user)
@@ -75,8 +75,8 @@
         }
 
         function checkCRM() {
-            var user = document.getElementById("user").value;
-            var name = document.getElementById("name").value;
+            var user = document.getElementById("user").value.toUpperCase();
+            var name = document.getElementById("name").value.toUpperCase();
             if (user == '') {
                 document.getElementById("error").innerHTML = 'You need to provide a name.';
                 return;
@@ -85,8 +85,8 @@
         }
 
         function play() {
-            var user = document.getElementById("user").value;
-            var name = document.getElementById("name").value;
+            var user = document.getElementById("user").value.toUpperCase();
+            var name = document.getElementById("name").value.toUpperCase();
             window.name = user;
             console.log(user.length)
             console.log(user)
