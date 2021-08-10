@@ -11275,7 +11275,7 @@ var finishState = (function(){
 // (state when player has lost last life)
 window.fullname = sessionStorage.getItem("fullname");
 const SCORE_BASE_URL = 'https://'+API_HOSTNAME+'/score';
-const CRM_BASE_URL = 'https://'+API_HOSTNAME+'/activities/';
+const CRM_BASE_URL = 'https://'+API_HOSTNAME+'/activities';
 
 var overState = (function() {
     var frames;
@@ -11290,7 +11290,7 @@ var overState = (function() {
               .catch(err => {
                 console.log(err);
               })
-	    axios.post(CRM_BASE_URL,{ "name" : window.fullname, "notes" : "{ \"timestamp\" : \""+Date.now().toString()+"\" \"game_id\": "+(1+gameMode)+", \"user_id\": \""+(window.name)+"\", \"score\": "+getScore()+" }" })
+	    axios.post(CRM_BASE_URL,{ "name" : window.fullname, "notes" : "{ \"timestamp\" : \""+Date.now().toString()+"\", \"game_id\": "+(1+gameMode)+", \"user_id\": \""+(window.name)+"\", \"score\": "+getScore()+" }" })
               .then(crmres => {
                 console.log(crmres);
               })
