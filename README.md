@@ -29,8 +29,9 @@ This is a rought set of notes to get this up and running.
 ### Here are some references to help
 
 - These instructions were originally built / tested with Oracle-Linux-7.8 image. Further testing has been conducted with:
-  - Oracle-Linux-7.9
-  - Canonical-Ubuntu-20.04
+  - Oracle-Linux-7.9 (Arm64)
+  - Oracle-Linux-8.4 (x86 and Arm64)
+  - Canonical-Ubuntu-20.04 (x86 and Arm64)
 - The tenancy OCID and user OCID are used for the automation using the Oracle APIs - here is a description of where in the OCI console to find this information - https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#five
 - The SSH key is a common element to infrastructure so you can log into the compute - use ie puttygen or ssh-keygen - https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/managingkeypairs.htm#Managing_Key_Pairs_on_Linux_Instances
 - The compute shape is used for the VM hosting the APIs as well as Oracle Functions (on docker). You can find out the different shapes here (VM.Standard.E2.1.Micro + VM.Standard.A1.Flex are the only shapes available as part of the Always-Free Tier) - https://docs.oracle.com/en-us/iaas/Content/Compute/References/computeshapes.htm
@@ -60,17 +61,22 @@ This is a rought set of notes to get this up and running.
         - git clone https://github.com/fnproject/fdk-go
         - git clone https://github.com/fnproject/fdk-python
         - git clone https://github.com/fnproject/fdk-node
-        - @TODO document specifically what is required. Referred git repos that need to be built.
+        - git clone https://github.com/fnproject/dockers
+        - @TODO document specifically what is required. Referred git repos that need to be built. The bootstrap-user-web.sh in the oci-arcade-tf repo has the logic and steps required [here](https://github.com/jlowe000/oci-arcade-tf/blob/kafka-arm64/scripts/bootstrap-user-web.sh)
     3. Create a database user and run the following scripts.
         - infra/db/init.sql
         - apis/score/db/init.sql
         - apis/events/db/init.sql
+        - apis/users/db/init.sql
+        - apis/users/db/init-crm-app.sql
+        - apis/users/db/init-crm-config.sql
     4. Create a dockerfile from containers/web/api-score.Dockerfile.template
     5. Create a new FN context with the FN_API_URL pointing to the port 8082
     6. Start FN server on arcade_network with the port 8082
     7. Deploy events serverless
     8. Deploy events publishevent
     9. Build / Run kafka events
+        - git clone https://github.com/wurstmeister/zookeeper-docker
     10. Build and Run api-score NodeJS server
     11. Upload games to object storage (if user api-key is enabled)
     12. More to come ... 
