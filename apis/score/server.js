@@ -4,6 +4,7 @@ const axios = require('axios');
 const cors = require('cors')
 const express = require('express');
 const { Session, Options, Processors } = require('@oracle/coherence')
+const { Kafka } = require("kafkajs")
 
 // Constants
 const SSL_PORT = 8081;
@@ -15,6 +16,11 @@ const APEX_WORKSPACE = process.env.APEX_WORKSPACE;
 const API_USER = process.env.API_USER;
 const API_PASSWORD = process.env.API_PASSWORD;
 const CERT_PASSWORD = process.env.CERT_PASSWORD;
+
+const BOOTSTRAP_SERVER = process.env.BOOTSTRAP_SERVER
+const OSS_USER = process.env.OSS_API_USER
+const OSS_PASSWORD = process.env.OSS_API_PASSWORD
+const TOPIC = process.env.TOPIC
 
 const token_refresh_interval = 1800000;
 
@@ -100,6 +106,20 @@ app.post('/score', (req, res) => {
   });
 });
 
+app.post('/events/api', (req, res) => {
+  console.log('url: /events');
+  console.log('method: post');
+  console.log('payload:',req.body);
+  axios.post('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/event_table/', req.body, { headers: { 'Authorization': 'Bearer '+access_token }})
+  .then(adwres => {
+    res.send(adwres.data);
+  })
+  .catch(err => {
+    console.log(err);
+    res.send('{ "response" : "bad" }');
+  });
+});
+
 app.get('/users/:name', (req, res) => {
   console.log('url: /users/:name');
   console.log('method: get');
@@ -159,7 +179,8 @@ app.post('/activities', (req, res) => {
     });
 });
 
-app.post('/event/:action', (req, res) => {
+/*
+  app.post('/event/:action', (req, res) => {
   console.log('url: /event/:action');
   console.log('method: post');
   console.log('action:',req.params.action);
@@ -201,6 +222,7 @@ axios.get('http://fnserver:8080/v2/apps?name=events')
 .catch(err => {
   console.log(err);
 });
+*/
 
 // app.listen(PORT, HOST);
 

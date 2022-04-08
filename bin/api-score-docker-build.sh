@@ -23,4 +23,9 @@ if [ "$2" != "" ]
 then 
   BUILD_OPTIONS="${BUILD_OPTIONS} --build-arg CERT_PASSWORD=$2"
 fi
+if [ "$3" != "" ]
+then 
+  BUILD_OPTIONS="${BUILD_OPTIONS} --build-arg OSS_API_USER=$3"
+  BUILD_OPTIONS="${BUILD_OPTIONS} --build-arg OSS_API_PASSWORD=$4"
+fi
 docker build --tag api-score ${BUILD_OPTIONS} --file containers/web/api-score.Dockerfile .

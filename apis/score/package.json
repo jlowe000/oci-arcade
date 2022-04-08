@@ -11,5 +11,6 @@
     "cors": "^2.8.5",
     "axios": "^0.20.0",
     "@oracle/coherence": "^1.0.0"
+    "kafkajs": "^1.16.0"
   }
 }
