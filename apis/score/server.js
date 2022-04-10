@@ -120,10 +120,7 @@ app.post('/event/api', (req, res) => {
   });
 });
 
-const kafka = new Kafka({
-  brokers: [BOOTSTRAP_SERVER],
-  clientId: 'arcade-producer'
-})
+const kafka = (OSS_USER == '') ? new Kafka({ brokers: [BOOTSTRAP_SERVER], clientId: 'arcade-producer' }) : new Kafka({ brokers: [BOOTSTRAP_SERVER], clientId: 'arcade-producer', ssl: true, sasl: { mechanism: 'plain', username: OSS_USER, password: OSS_PASSWORD }})
 const producer = kafka.producer()
 
 const send_message = async (body) => {
