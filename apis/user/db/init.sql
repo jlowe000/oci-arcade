@@ -68,7 +68,7 @@ BEGIN
       p_mimes_allowed  => '',
       p_comments       => NULL,
       p_source         => 
-'SELECT ID, NAME, CONTACT_FLEX_01 as ARCADE_NAME FROM EBA_CUST_CONTACTS');
+'SELECT ID, NAME, NOTES as ARCADE_NAME FROM EBA_CUST_CONTACTS');
 
   ORDS.DEFINE_HANDLER(
       p_module_name    => 'CRM',
@@ -79,7 +79,7 @@ BEGIN
       p_comments       => NULL,
       p_source         => 
 'BEGIN
-INSERT INTO EBA_CUST_CONTACTS (ID, CUSTOMER_ID, NAME, CONTACT_FLEX_01)
+INSERT INTO EBA_CUST_CONTACTS (ID, CUSTOMER_ID, NAME, NOTES)
 SELECT EBA_CUST_SEQ.nextval, ID, :name, :arcade_id
 FROM EBA_CUST_CUSTOMERS
 WHERE CUSTOMER_NAME = ''OCI Arcade'';
@@ -103,7 +103,7 @@ END;');
       p_source         => 
 'BEGIN
   UPDATE EBA_CUST_CONTACTS
-    SET CONTACT_FLEX_01 = :arcade_id
+    SET NOTES = :arcade_id
   WHERE
     NAME = :name;
 END;');
@@ -116,7 +116,7 @@ END;');
       p_mimes_allowed  => '',
       p_comments       => NULL,
       p_source         => 
-'SELECT ID, NAME, CONTACT_FLEX_01 as ARCADE_NAME
+'SELECT ID, NAME, NOTES as ARCADE_NAME
 FROM EBA_CUST_CONTACTS
 WHERE NAME = :name');
     
