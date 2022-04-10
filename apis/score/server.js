@@ -107,7 +107,7 @@ app.post('/score', (req, res) => {
 });
 
 app.post('/event/api', (req, res) => {
-  console.log('url: /event');
+  console.log('url: /event/api');
   console.log('method: post');
   console.log('payload:',req.body);
   axios.post('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/event_table/', req.body, { headers: { 'Authorization': 'Bearer '+access_token }})
@@ -118,6 +118,33 @@ app.post('/event/api', (req, res) => {
     console.log(err);
     res.send('{ "response" : "bad" }');
   });
+});
+
+const kafka = new Kafka({
+  brokers: [BOOTSTRAP_SERVER],
+  clientId: 'arcade-producer'
+})
+const producer = kafka.producer()
+
+const send_message = async (body) => {
+  await producer.connect()
+  console.log("connected");
+  await producer.send({
+    topic: TOPIC,
+    messages: [
+      { key: body, value: body }
+    ]
+  });
+  console.log("sent");
+}
+
+app.post('/event/publishevent', (req, res) => {
+  console.log('bootstrap_server: '+BOOTSTRAP_SERVER);
+  console.log('url: /event/publishevent');
+  console.log('method: post');
+  console.log('payload:',req.body);
+  send_message(JSON.stringify(req.body))
+  res.send('{ "response" : "good" }');
 });
 
 app.get('/users/:name', (req, res) => {
