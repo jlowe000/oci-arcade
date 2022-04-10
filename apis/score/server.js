@@ -106,8 +106,8 @@ app.post('/score', (req, res) => {
   });
 });
 
-app.post('/events/api', (req, res) => {
-  console.log('url: /events');
+app.post('/event/api', (req, res) => {
+  console.log('url: /event');
   console.log('method: post');
   console.log('payload:',req.body);
   axios.post('https://'+ORDS_HOSTNAME+'/ords/'+APEX_WORKSPACE+'/event_table/', req.body, { headers: { 'Authorization': 'Bearer '+access_token }})
