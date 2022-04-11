@@ -20,7 +20,7 @@ begin
     -- Add Users
     insert into eba_cust_users
         (username, access_level_id, account_locked)
-	values ('OCIARCADE', 3, 'N')l
+	values ('OCIARCADE', 3, 'N');
 
     -- begin
     --     insert into eba_cust_users
