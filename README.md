@@ -9,6 +9,15 @@ This borrows a couple of open-source javascript games to extends and play with.
 
 This is a rought set of notes to get this up and running.
 
+## Branches
+
+There's a number of branches that exist for the purposes of terraform using https://github.com/jlowe000/oci-arcade-tf.
+
+- master - the main one but it is "dated" because of the consistency of the branches moving forward being the separate version of what it takes. the master is here as the base of the game itself so adding new games and then distributing them through to the other branches. (using 2 x E2.1.Micro x86-64 VMs)
+- kafka - kafka implementation to demonstrate streaming events. (using 2 x E2.1.Micro x86-64 VMs)
+- kafka-arm64 - a version of the kafka implementation on arm64. (using 1 x A1.Flex arm64 VM)
+- coherence-ce - coherence-ce implementation to demonstrate in-memory data grid. (using 2 x E2.1.Micro x86-64 VMs)
+
 ## Pre-Requisites
 
 - Need an OCI Tenancy and this is built with a Always-Free Tier account in mind.
@@ -38,6 +47,8 @@ This is a rought set of notes to get this up and running.
 - The compute shape is used for the VM hosting the APIs as well as Oracle Functions (on docker). You can find out the different shapes here (VM.Standard.E2.1.Micro + VM.Standard.A1.Flex are the only shapes available as part of the Always-Free Tier) - https://docs.oracle.com/en-us/iaas/Content/Compute/References/computeshapes.htm
 
 ## 2. Start Provisioning ...
+
+(This is different for the different variations above)
 
 1. Create a VCN with a public subnet
 1. Create an ADW instance
@@ -73,6 +84,6 @@ This is a rought set of notes to get this up and running.
 - Note:
   - In an Always-Free Tier, you make get issues when you "Apply" because (these are the common ones I found):
     - There can only be 2 x VCN allowed in the tenancy.
-    - There can only be 2 x VM instances and 2 x Autonomous Database instances.
+    - There can only be 2 x E2.1.Micro VM instances, 4 x A1.Flex VM instances and 2 x Autonomous Database instances.
   - Need to "accept" exception in browser for the API calls (https://<compute-public-ip>:8081/event) - Without this step, API calls from game will fail with CERT exception
   - If you are wanting to "Destroy" the stack, you need to delete the folders in the oci-arcade bucket before running the Terraform destroy activity. Otherwise, the bucket will fail to be destroyed. You can delete the folders which will delete the underlying objects.
