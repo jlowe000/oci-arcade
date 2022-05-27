@@ -2,8 +2,7 @@
 <html>
 
 <head>
-
-    <title>Consume-Cloud</title>
+    <title>OCI Arcade</title>
     <!-- last updated: Sun May 19 21:43:14 PDT 2019 -->
     <!-- Lock viewport on mobile devices. -->
     <!--
@@ -40,19 +39,16 @@
         }
     </style>
 
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="api_hostname.js"></script>
-<script src="consume-cloud.js"></script>
-
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="api_hostname.js"></script>
+    <script src="consume-cloud.js"></script>
 </head>
 
 <body>
-
     <div style='font-family: ArcadeR'> </div>
-    <canvas id='canvas'><div id="canvas-warning">Your browser does not support HTML Canvas.  Please upgrade!</div></canvas>
-    <!-- <canvas id='atlas' style="display:none"></canvas> -->
-    <canvas id='atlas' style="display:none"><div id="canvas-warning">Your browser does not support HTML Canvas.  Please upgrade!</div></canvas>
-
+    <canvas id="canvas" style=""><div id="canvas-warning">Your browser does not support HTML Canvas.  Please upgrade!</div></canvas>
+    <img id="sprites" src="atlas.png" style="display:none">
+    <canvas id="atlas" style="display:none"><div id="canvas-warning">Your browser does not support HTML Canvas.  Please upgrade!</div></canvas>
 </body>
 
 </html>

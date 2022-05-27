@@ -2394,18 +2394,13 @@ var atlas = (function(){
         ctx.stroke();
     };
 
-    var create = function() {
+    var print= function() {
         drawGrid();
         canvas = document.getElementById('atlas');
         ctx = canvas.getContext("2d");
-        /*
-        canvas.style.left = 0;
-        canvas.style.top = 0;
-        canvas.style.position = "absolute";
-        */
 
-        var w = size*cols*renderScale;
-        var h = size*rows*renderScale;
+        var w = 2000;
+        var h = 4000;
         canvas.width = w;
         canvas.height = h;
 
@@ -2416,8 +2411,8 @@ var atlas = (function(){
 
         ctx.save();
         ctx.clearRect(0,0,w,h);
-        ctx.scale(renderScale,renderScale);
-
+        ctx.scale(5,5);
+		 
         var drawAtCell = function(f,row,col) {
             var x = col*size + size/2;
             var y = row*size + size/2;
@@ -2507,23 +2502,23 @@ var atlas = (function(){
         row++;
 
         row++;
-        drawAtCell(function(x,y) { drawPacPoints(ctx, x,y, 200, "#33ffff"); }, row, 0);
-        drawAtCell(function(x,y) { drawPacPoints(ctx, x,y, 400, "#33ffff"); }, row, 1);
-        drawAtCell(function(x,y) { drawPacPoints(ctx, x,y, 800, "#33ffff"); }, row, 2);
-        drawAtCell(function(x,y) { drawPacPoints(ctx, x,y, 1600, "#33ffff");}, row, 3);
-        drawAtCell(function(x,y) { drawPacPoints(ctx, x,y, 100, "#ffb8ff"); }, row, 4);
-        drawAtCell(function(x,y) { drawPacPoints(ctx, x,y, 300, "#ffb8ff"); }, row, 5);
-        drawAtCell(function(x,y) { drawPacPoints(ctx, x,y, 500, "#ffb8ff"); }, row, 6);
-        drawAtCell(function(x,y) { drawPacPoints(ctx, x,y, 700, "#ffb8ff"); }, row, 7);
-        drawAtCell(function(x,y) { drawPacPoints(ctx, x,y, 1000, "#ffb8ff"); }, row, 8);
-        drawAtCell(function(x,y) { drawPacPoints(ctx, x,y, 2000, "#ffb8ff"); }, row, 9);
-        drawAtCell(function(x,y) { drawPacPoints(ctx, x,y, 3000, "#ffb8ff"); }, row, 10);
-        drawAtCell(function(x,y) { drawPacPoints(ctx, x,y, 5000, "#ffb8ff"); }, row, 11);
+        drawAtCell(function(x,y) { drawPoints(ctx, x,y, 200, "#33ffff"); }, row, 0);
+        drawAtCell(function(x,y) { drawPoints(ctx, x,y, 400, "#33ffff"); }, row, 1);
+        drawAtCell(function(x,y) { drawPoints(ctx, x,y, 800, "#33ffff"); }, row, 2);
+        drawAtCell(function(x,y) { drawPoints(ctx, x,y, 1600, "#33ffff");}, row, 3);
+        drawAtCell(function(x,y) { drawPoints(ctx, x,y, 100, "#ffb8ff"); }, row, 4);
+        drawAtCell(function(x,y) { drawPoints(ctx, x,y, 300, "#ffb8ff"); }, row, 5);
+        drawAtCell(function(x,y) { drawPoints(ctx, x,y, 500, "#ffb8ff"); }, row, 6);
+        drawAtCell(function(x,y) { drawPoints(ctx, x,y, 700, "#ffb8ff"); }, row, 7);
+        drawAtCell(function(x,y) { drawPoints(ctx, x,y, 1000, "#ffb8ff"); }, row, 8);
+        drawAtCell(function(x,y) { drawPoints(ctx, x,y, 2000, "#ffb8ff"); }, row, 9);
+        drawAtCell(function(x,y) { drawPoints(ctx, x,y, 3000, "#ffb8ff"); }, row, 10);
+        drawAtCell(function(x,y) { drawPoints(ctx, x,y, 5000, "#ffb8ff"); }, row, 11);
         row++;
 
         row++;
         drawAtCell(function(x,y) {
-            drawSnail(ctx,x,y, "#0ff");
+            drawSnail(ctx,x,y, "#0FF");
         }, row, 0);
         drawAtCell(function(x,y) {
             drawSnail(ctx,x,y, "#FFF");
@@ -2531,6 +2526,35 @@ var atlas = (function(){
 
         row++;
         row++;
+
+	var dataURL = canvas.toDataURL("image/png", 1.0);
+	var a = document.createElement('a');
+        a.href = dataURL;
+        a.download = 'atlas.png';
+        document.body.appendChild(a);
+        a.click();
+    };
+
+    var create = function() {
+        drawGrid();
+        canvas = document.getElementById('atlas');
+        ctx = canvas.getContext("2d");
+
+        var w = size*cols*renderScale;
+        var h = size*rows*renderScale;
+        canvas.width = w;
+        canvas.height = h;
+
+        if (creates > 0) {
+            ctx.restore();
+        }
+        creates++;
+
+        ctx.save();
+        ctx.clearRect(0,0,w,h);
+        ctx.scale(renderScale/5,renderScale/5);
+        var img = document.getElementById("sprites");
+        ctx.drawImage(img, 0, 0);
     };
 
     var copyCellTo = function(row, col, destCtx, x, y,display) {
@@ -2654,6 +2678,7 @@ var atlas = (function(){
     };
 
     return {
+        print: print,
         create: create,
         getCanvas: function() { return canvas; },
         drawCoinSprite: copyCoinSprite,
@@ -3411,6 +3436,7 @@ var initRenderer = function(){
                 var numRows = 36;
                 var numCols = 28;
 
+                var scale = 0.85;
                 if (!isCutscene) {
                     // draw extra lives
                     var i;
@@ -3418,11 +3444,11 @@ var initRenderer = function(){
 
                     bgCtx.save();
                     bgCtx.translate(3*tileSize, (numRows-1)*tileSize);
-                    bgCtx.scale(0.85, 0.85);
+                    bgCtx.scale(scale, scale);
                     var lives = extraLives == Infinity ? 1 : extraLives;
                     if (gameMode == GAME_CLOUD) {
                         for (i=0; i<lives; i++) {
-                            drawCloudSprite(bgCtx, 0,0, DIR_LEFT, Math.PI/6);
+                            atlas.drawCloudSprite(bgCtx, 0, 0, DIR_LEFT, 0, true);
                             bgCtx.translate(2*tileSize,0);
                         }
                     }
@@ -3472,18 +3498,18 @@ var initRenderer = function(){
                     // for the Ms Pac-Man game, display stop after the 7th fruit
                     startLevel = Math.min(numService,startLevel);
                 }
-                var scale = 0.85;
                 for (i=0, j=startLevel-numService+1; i<numService && j<=level; j++, i++) {
                     f = fruits[j];
                     if (f) {
-                        drawFunc = getSpriteFuncFromServiceName(f.name);
-                        if (drawFunc) {
+                        // drawFunc = getSpriteFuncFromServiceName(f.name);
+                        // if (drawFunc) {
                             bgCtx.save();
                             bgCtx.translate((numCols-3)*tileSize - i*16*scale, (numRows-1)*tileSize);
                             bgCtx.scale(scale,scale);
-                            drawFunc(bgCtx,0,0);
+                            // drawFunc(bgCtx,0,0);
+                            drawFunc = atlas.drawServiceSprite(bgCtx,0,0,f.name);
                             bgCtx.restore();
-                        }
+                        // }
                     }
                 }
                 if (!isCutscene) {
@@ -3548,8 +3574,8 @@ var initRenderer = function(){
             ctx.fillStyle = "#FFF";
 
             ctx.textAlign = "right";
-            ctx.fillText("1UP "+window.name, 7*tileSize, 0);
-            ctx.fillText(practiceMode ? "PRACTICE" : "HIGH SCORE", 18*tileSize, 0);
+            ctx.fillText("1UP "+window.name, 14*tileSize, 0);
+            ctx.fillText(practiceMode ? "PRACTICE" : "HIGH SCORE", 25*tileSize, 0);
             //ctx.fillText("2UP", 25*tileSize, 0);
 
             // TODO: player two score
@@ -3558,14 +3584,14 @@ var initRenderer = function(){
                 score = "00";
             }
             var y = tileSize+1;
-            ctx.fillText(score, 7*tileSize, y);
+            ctx.fillText(score, 14*tileSize, y);
 
             if (!practiceMode) {
                 var highScore = getHighScore();
                 if (highScore == 0) {
                     highScore = "00";
                 }
-                ctx.fillText(highScore, 18*tileSize, y);
+                ctx.fillText(highScore, 25*tileSize, y);
             }
         },
 
@@ -4410,124 +4436,7 @@ var inGameMenu = (function() {
 
 var drawCoinSprite = (function(){
 
-    // add top of the ghost head to the current canvas path
-    var addHead = (function() {
-
-        // pixel coordinates for the top of the head
-        // on the original arcade ghost sprite
-        var coords = [
-            0,6,
-            1,3,
-            2,2,
-            3,1,
-            4,1,
-            5,0,
-            8,0,
-            9,1,
-            10,1,
-            11,2,
-            12,3,
-            13,6,
-        ];
-
-        return function(ctx) {
-            var i;
-            ctx.save();
-
-            // translate by half a pixel to the right
-            // to try to force centering
-            ctx.translate(0.5,0.5);
-            ctx.translate(0,6);
-
-            // ctx.moveTo(0,6);
-            // ctx.quadraticCurveTo(1.5,0,6.5,0);
-            // ctx.quadraticCurveTo(11.5,0,13,6);
-            ctx.arc(6.5,0,6.5,0,2*Math.PI);
-
-            // draw lines between pixel coordinates
-            /*
-            ctx.moveTo(coords[0],coords[1]);
-            for (i=2; i<coords.length; i+=2)
-                ctx.lineTo(coords[i],coords[i+1]);
-            */
-
-            ctx.restore();
-        };
-    })();
-
-    // add first ghost animation frame feet to the current canvas path
-    var addFeet1 = (function(){
-
-        // pixel coordinates for the first feet animation
-        // on the original arcade ghost sprite
-        var coords = [
-            13,13,
-            11,11,
-            9,13,
-            8,13,
-            8,11,
-            5,11,
-            5,13,
-            4,13,
-            2,11,
-            0,13,
-        ];
-
-        return function(ctx) {
-            var i;
-            ctx.save();
-
-            // translate half a pixel right and down
-            // to try to force centering and proper height
-            ctx.translate(0.5,0.5);
-
-            // continue previous path (assuming ghost head)
-            // by drawing lines to each of the pixel coordinates
-            for (i=0; i<coords.length; i+=2)
-                ctx.lineTo(coords[i],coords[i+1]);
-
-            ctx.restore();
-        };
-
-    })();
-
-    // add second ghost animation frame feet to the current canvas path
-    var addFeet2 = (function(){
-
-        // pixel coordinates for the second feet animation
-        // on the original arcade ghost sprite
-        var coords = [
-            13,12,
-            12,13,
-            11,13,
-            9,11,
-            7,13,
-            6,13,
-            4,11,
-            2,13,
-            1,13,
-            0,12,
-        ];
-
-        return function(ctx) {
-            var i;
-            ctx.save();
-
-            // translate half a pixel right and down
-            // to try to force centering and proper height
-            ctx.translate(0.5,0.5);
-
-            // continue previous path (assuming ghost head)
-            // by drawing lines to each of the pixel coordinates
-            for (i=0; i<coords.length; i+=2)
-                ctx.lineTo(coords[i],coords[i+1]);
-
-            ctx.restore();
-        };
-
-    })();
-
-    // draw regular ghost eyes
+    // draw regular eyes
     var addEyes = function(ctx,dirEnum){
         var i;
 
@@ -4590,7 +4499,7 @@ var drawCoinSprite = (function(){
         ctx.restore();
     };
 
-    // draw scared ghost face
+    // draw scared face
     var addScaredFace = function(ctx,flash){
         ctx.strokeStyle = ctx.fillStyle = flash ? "#F00" : "#FF0";
 
@@ -4619,22 +4528,13 @@ var drawCoinSprite = (function(){
         ctx.lineWidth = 1.0;
         ctx.stroke();
         ctx.translate(-0.5,-0.5);
-        /*
-        ctx.fillRect(1,10,1,1);
-        ctx.fillRect(12,10,1,1);
-        ctx.fillRect(2,9,2,1);
-        ctx.fillRect(6,9,2,1);
-        ctx.fillRect(10,9,2,1);
-        ctx.fillRect(4,10,2,1);
-        ctx.fillRect(8,10,2,1);
-        */
     };
 
 
-    // draw scared ghost face
+    // draw scared face
     var addCurrency = function(ctx,color,frame){
         ctx.save();
-        ctx.strokeStyle = ctx.fillStyle = "#000";
+        ctx.strokeStyle = ctx.fillStyle = "#FFF";
         ctx.font = tileSize+"px ArcadeR";
         // ctx.scale(1,1);
         if (color == dollar.color) {
@@ -4647,30 +4547,6 @@ var drawCoinSprite = (function(){
             ctx.fillText('L',3.5,12);
         } 
         ctx.restore();
-
-        // dollar
-        /*
-        var coords = [
-            9,5, 8,4, 7,3, 6,4, 5,5
-        ];
-        ctx.translate(0.5,0.5);
-        ctx.beginPath();
-        ctx.moveTo(coords[0],coords[1]);
-        for (i=2; i<coords.length; i+=2)
-            ctx.lineTo(coords[i],coords[i+1]);
-        ctx.lineWidth = 2.0;
-        ctx.stroke();
-        ctx.translate(-0.5,-0.5);
-        */
-        /*
-        ctx.fillRect(1,10,1,1);
-        ctx.fillRect(12,10,1,1);
-        ctx.fillRect(2,9,2,1);
-        ctx.fillRect(6,9,2,1);
-        ctx.fillRect(10,9,2,1);
-        ctx.fillRect(4,10,2,1);
-        ctx.fillRect(8,10,2,1);
-        */
     };
 
     return function(ctx,x,y,frame,dirEnum,scared,flash,eyes_only,color) {
@@ -4681,56 +4557,34 @@ var drawCoinSprite = (function(){
             color = flash ? "#FFF" : "#2121ff";
 
         if (!eyes_only) {
-			ctx.save();
-			ctx.translate(0.5,0.5);
-			ctx.translate(0,6);
-			ctx.beginPath();
-			ctx.arc(7,0,6,0,2*Math.PI);
-			ctx.lineJoin = 'round';
-			ctx.lineCap = 'round';
-			ctx.lineWidth = 2;
-			ctx.strokeStyle = color;
-			ctx.stroke();
-			ctx.fillStyle = '#000';
-			ctx.fill();
-			ctx.closePath();
-			// ctx.lineWidth = 1;
-			// ctx.font = (tileSize-4)+"px";
-			ctx.translate(4,3.5);
-			ctx.fillStyle = color;
-			// ctx.fillText('$\u00A3\u00A5\u20AC',0,0);
-            if (!scared)
-				if (color == dollar.color) {
-					ctx.fillText('$',0.25,0);
-				} else if (color == pound.color) {
-					ctx.fillText('\u00A3',0.25,-0.1);
-				} else if (color == yen.color) {
-					ctx.fillText('\u00A5',0.25,0.5);
-				} else if (color == euro.color) {
-					ctx.fillText('\u20AC',-0.25,0);
-				} 
-			// translate by half a pixel to the right
-			// to try to force centering
-			ctx.restore();
-			/*
-            // draw body
+            ctx.save();
+            ctx.translate(0.5,0.5);
+            ctx.translate(0,6);
             ctx.beginPath();
-            addHead(ctx);
-            // if (frame == 0)
-            //    addFeet1(ctx);
-            // else
-            //    addFeet2(ctx);
-            ctx.closePath();
+            ctx.arc(7,0,6,0,2*Math.PI);
             ctx.lineJoin = 'round';
             ctx.lineCap = 'round';
-            ctx.lineWidth = 0.5;
+            ctx.lineWidth = 2;
             ctx.strokeStyle = color;
             ctx.stroke();
-            ctx.lineWidth = 1;
-            ctx.fillStyle = color;
+            ctx.fillStyle = '#000';
             ctx.fill();
-            // addCurrency(ctx,color,frame);
-			*/
+            ctx.closePath();
+            ctx.translate(4,3.5);
+            ctx.fillStyle = color;
+            if (!scared)
+                if (color == dollar.color) {
+                    ctx.fillText('$',0.25,0);
+                } else if (color == pound.color) {
+                    ctx.fillText('\u00A3',0.25,-0.1);
+                } else if (color == yen.color) {
+                    ctx.fillText('\u00A5',0.25,0.5);
+                } else if (color == euro.color) {
+                    ctx.fillText('\u20AC',-0.25,0);
+                } 
+            // translate by half a pixel to the right
+            // to try to force centering
+            ctx.restore();
         }
         else
             addEyes(ctx,dirEnum);
@@ -4743,8 +4597,198 @@ var drawCoinSprite = (function(){
     };
 })();
 
-// draw points displayed when pac-man eats a ghost or a fruit
-var drawPacPoints = (function(){
+// draw cloud body
+var drawCloudSprite = function(ctx,x,y,dirEnum,angle,mouthShift,scale,centerShift,alpha,color,rot_angle) {
+
+    var addCloud = function(ctx) {
+        ctx.save();
+        color = '#000';
+        // ctx.scale(10,10);
+        ctx.beginPath();
+        ctx.arc(-2,1,1.5,0,2*Math.PI);
+        ctx.closePath();
+        ctx.strokeStyle = color;
+        ctx.stroke();
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(0,0,2,0,2*Math.PI);
+        ctx.closePath();
+        ctx.strokeStyle = color;
+        ctx.stroke();
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(2,0,1,0,2*Math.PI);
+        ctx.closePath();
+        ctx.strokeStyle = color;
+        ctx.stroke();
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(3,0,1,0,2*Math.PI);
+        ctx.closePath();
+        ctx.strokeStyle = color;
+        ctx.stroke();
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(4.5,1.5,1,0,2*Math.PI);
+        ctx.closePath();
+        ctx.strokeStyle = color;
+        ctx.stroke();
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.rect(-1,1.25,4.5,1.25);
+        ctx.closePath();
+        ctx.strokeStyle = color;
+        ctx.stroke();
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.restore();
+    };
+
+    if (mouthShift == undefined) mouthShift = 0;
+    if (centerShift == undefined) centerShift = 0;
+    if (scale == undefined) scale = 1;
+    if (alpha == undefined) alpha = 1;
+
+    if (color == undefined) {
+        color = "rgba(255,0,0," + alpha + ")";
+    }
+
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.scale(scale,scale);
+    if (rot_angle) {
+        ctx.rotate(rot_angle);
+    }
+
+    // rotate to current heading direction
+    var d90 = Math.PI/2;
+    if (dirEnum == DIR_UP) ctx.rotate(3*d90);
+    else if (dirEnum == DIR_RIGHT) ctx.rotate(0);
+    else if (dirEnum == DIR_DOWN) ctx.rotate(d90);
+    else if (dirEnum == DIR_LEFT) ctx.rotate(2*d90);
+
+    // plant corner of mouth
+    ctx.beginPath();
+    ctx.moveTo(-3+mouthShift,0);
+
+    // draw head outline
+    // ctx.arc(centerShift,0,6.5,angle,2*Math.PI-angle);
+    ctx.arc(centerShift,0,6.5,0,2*Math.PI);
+    ctx.closePath();
+
+    ctx.strokeStyle = color;
+    ctx.stroke();
+    ctx.fillStyle = color;
+    ctx.fill();
+
+    ctx.restore();
+
+    ctx.save();
+    ctx.translate(x-0.75,y-0.25);
+    ctx.scale(scale,scale);
+    addCloud(ctx);
+    ctx.restore();
+
+};
+
+////////////////////////////////////////////////////////////////////
+// SERVICE SPRITES
+
+var drawCompute = function(ctx,x,y,color) {
+
+    ctx.save();
+    ctx.translate(x-7,y-7);
+    
+    ctx.beginPath();
+    ctx.lineWidth = 1;
+    ctx.rect(0,0,14,14);
+    ctx.rect(2,2,2,2);
+    ctx.rect(6,2,2,2);
+    ctx.rect(10,2,2,2);
+    ctx.rect(2,6,2,2);
+    ctx.rect(6,6,2,2);
+    ctx.rect(10,6,2,2);
+    ctx.rect(2,10,10,2);
+    ctx.strokeStyle = color;
+    ctx.stroke();
+
+    ctx.restore();
+};
+
+var drawCompute1 = function(ctx,x,y) {
+    drawCompute(ctx,x,y,'#FFF');
+}
+
+var drawCompute2 = function(ctx,x,y) {
+    drawCompute(ctx,x,y,'#f54242');
+}
+
+var drawCompute3 = function(ctx,x,y) {
+    drawCompute(ctx,x,y,'#f5a142');
+}
+
+var drawCompute4 = function(ctx,x,y) {
+    drawCompute(ctx,x,y,'#f5ef42');
+}
+
+var drawCompute5 = function(ctx,x,y) {
+    drawCompute(ctx,x,y,'#81f542');
+}
+
+var drawCompute6 = function(ctx,x,y) {
+    drawCompute(ctx,x,y,'#42f584');
+}
+
+var drawCompute7 = function(ctx,x,y) {
+    drawCompute(ctx,x,y,'#42ecf5');
+}
+
+var drawCompute8 = function(ctx,x,y) {
+    drawCompute(ctx,x,y,'#4278f5');
+}
+
+var drawCompute9 = function(ctx,x,y) {
+    drawCompute(ctx,x,y,'#8d42f5');
+}
+
+var drawCompute10 = function(ctx,x,y) {
+    drawCompute(ctx,x,y,'#f542f2');
+}
+
+var drawCompute11 = function(ctx,x,y) {
+    drawCompute(ctx,x,y,'#f5429e');
+}
+
+var drawCompute12 = function(ctx,x,y) {
+    drawCompute(ctx,x,y,'#f54242');
+}
+
+var getSpriteFuncFromServiceName = function(name) {
+    var funcs = {
+        'compute1': drawCompute1,
+        'compute2': drawCompute2,
+        'compute3': drawCompute3,
+        'compute4': drawCompute4,
+        'compute5': drawCompute5,
+        'compute6': drawCompute6,
+        'compute7': drawCompute7,
+        'compute8': drawCompute8,
+        'compute9': drawCompute9,
+        'compute10': drawCompute10,
+        'compute11': drawCompute11,
+        'compute12': drawCompute12,
+    };
+
+    return funcs[name];
+};
+
+// draw points displayed when cloud eats a coin or a service
+var drawPoints = (function(){
     var ctx;
     var color;
 
@@ -5035,1328 +5079,6 @@ var drawPacPoints = (function(){
     };
 })();
 
-// draw points displayed when ms. pac-man eats a fruit
-var drawMsPacPoints = (function(){
-    var ctx;
-    var color = "#fff";
-
-    var plotOutline = function(points,color) {
-        var len = points.length;
-        var i;
-        ctx.beginPath();
-        ctx.moveTo(points[0],points[1]);
-        for (i=2; i<len; i+=2) {
-            ctx.lineTo(points[i],points[i+1]);
-        }
-        ctx.closePath();
-        ctx.lineWidth = 1.0;
-        ctx.lineCap = ctx.lineJoin = "round";
-        ctx.strokeStyle = color;
-        ctx.stroke();
-    };
-
-    var plotLine = function(points,color) {
-        var len = points.length;
-        var i;
-        ctx.beginPath();
-        ctx.moveTo(points[0],points[1]);
-        for (i=2; i<len; i+=2) {
-            ctx.lineTo(points[i],points[i+1]);
-        }
-        ctx.lineWidth = 1.0;
-        ctx.lineCap = ctx.lineJoin = "round";
-        ctx.strokeStyle = color;
-        ctx.stroke();
-    };
-
-
-    var draw0 = function(x,y) {
-        ctx.save();
-        ctx.translate(x,y);
-        plotOutline([
-            0,0,
-            2,0,
-            2,4,
-            0,4,
-        ],color);
-        ctx.restore();
-    };
-
-    var draw1 = function(x,y) {
-        ctx.save();
-        ctx.translate(x,y);
-        plotLine([
-            1,0,
-            1,4,
-        ],color);
-        ctx.restore();
-    };
-
-    var draw2 = function(x,y) {
-        ctx.save();
-        ctx.translate(x,y);
-        plotLine([
-            0,0,
-            2,0,
-            2,2,
-            0,2,
-            0,4,
-            2,4,
-        ],color);
-        ctx.restore();
-    };
-
-    var draw5 = function(x,y) {
-        ctx.save();
-        ctx.translate(x,y);
-        plotLine([
-            2,0,
-            0,0,
-            0,2,
-            2,2,
-            2,4,
-            0,4,
-        ],color);
-        ctx.restore();
-    };
-
-    var draw7 = function(x,y) {
-        ctx.save();
-        ctx.translate(x,y);
-        plotLine([
-            0,0,
-            2,0,
-            2,4,
-        ],color);
-        ctx.restore();
-    };
-
-    var draw100 = function() {
-        draw1(-5,-5);
-        draw0(-1,-2);
-        draw0(3,1);
-    };
-
-    var draw200 = function() {
-        draw2(-5,-5);
-        draw0(-1,-2);
-        draw0(3,1);
-    };
-
-    var draw500 = function() {
-        draw5(-5,-5);
-        draw0(-1,-2);
-        draw0(3,1);
-    };
-
-    var draw700 = function() {
-        draw7(-5,-5);
-        draw0(-1,-2);
-        draw0(3,1);
-    };
-
-    var draw1000 = function() {
-        draw1(-7,-7);
-        draw0(-3,-4);
-        draw0(1,-1);
-        draw0(5,2);
-    };
-
-    var draw2000 = function() {
-        draw2(-7,-7);
-        draw0(-3,-4);
-        draw0(1,-1);
-        draw0(5,2);
-    };
-
-    var draw5000 = function() {
-        draw5(-7,-7);
-        draw0(-3,-4);
-        draw0(1,-1);
-        draw0(5,2);
-    };
-
-    return function(_ctx,x,y,points) {
-        ctx = _ctx;
-
-        ctx.save();
-        ctx.translate(x+0.5,y+0.5);
-
-        var f = {
-            100: draw100,
-            200: draw200,
-            500: draw500,
-            700: draw700,
-            1000: draw1000,
-            2000: draw2000,
-            5000: draw5000,
-        }[points];
-
-        if (f) {
-            f();
-        }
-
-        ctx.restore();
-    };
-})();
-
-var drawMonsterSprite = (function(){
-    var ctx;
-    var color;
-
-    var plotOutline = function(points,color) {
-        var len = points.length;
-        var i;
-        ctx.beginPath();
-        ctx.moveTo(points[0],points[1]);
-        for (i=2; i<len; i+=2) {
-            ctx.lineTo(points[i],points[i+1]);
-        }
-        ctx.closePath();
-        ctx.lineWidth = 1.0;
-        ctx.lineCap = ctx.lineJoin = "round";
-        ctx.strokeStyle = color;
-        ctx.stroke();
-    };
-
-    var plotLine = function(points,color) {
-        var len = points.length;
-        var i;
-        ctx.beginPath();
-        ctx.moveTo(points[0],points[1]);
-        for (i=2; i<len; i+=2) {
-            ctx.lineTo(points[i],points[i+1]);
-        }
-        ctx.lineWidth = 1.0;
-        ctx.lineCap = ctx.lineJoin = "round";
-        ctx.strokeStyle = color;
-        ctx.stroke();
-    };
-
-    var plotSolid = function(points,color) {
-        var len = points.length;
-        var i;
-        ctx.beginPath();
-        ctx.moveTo(points[0],points[1]);
-        for (i=2; i<len; i+=2) {
-            ctx.lineTo(points[i],points[i+1]);
-        }
-        ctx.closePath();
-        ctx.lineWidth = 1.0;
-        ctx.lineJoin = "round";
-        ctx.fillStyle = ctx.strokeStyle = color;
-        ctx.fill();
-        ctx.stroke();
-    };
-
-
-    // draw regular ghost eyes
-    var drawEye = function(dirEnum,x,y){
-        var i;
-
-        ctx.save();
-        ctx.translate(x,y);
-
-        plotSolid([
-            0,1,
-            1,0,
-            2,0,
-            3,1,
-            3,3,
-            2,4,
-            1,4,
-            0,3
-        ],"#FFF");
-
-        // translate pupil to correct position
-        if (dirEnum == DIR_LEFT) ctx.translate(0,2);
-        else if (dirEnum == DIR_RIGHT) ctx.translate(2,2);
-        else if (dirEnum == DIR_UP) ctx.translate(1,0);
-        else if (dirEnum == DIR_DOWN) ctx.translate(1,3);
-
-        // draw pupil
-        plotSolid([
-            0,0,
-            1,0,
-            1,1,
-            0,1,
-        ],"#00F");
-
-        ctx.restore();
-    };
-
-    var drawRightBody = function() {
-        plotSolid([
-            -7,-3,
-            -3,-7,
-            -1,-7,
-            -2,-6,
-            0,-4,
-            3,-7,
-            5,-7,
-            4,-7,
-            3,-6,
-            6,-3,
-            6,1,
-            5,3,
-            2,6,
-            -4,6,
-            -5,5,
-            -7,1,
-        ],color);
-    };
-
-    var drawRightShoe = function(x,y) {
-        ctx.save();
-        ctx.translate(x,y);
-        plotSolid([
-            0,0,
-            3,-3,
-            4,-3,
-            5,-2,
-            5,-1,
-            4,0,
-        ],"#00F");
-        ctx.restore();
-    };
-
-    var drawRight0 = function() {
-        // antenna tips
-        plotLine([-1,-7,0,-6],"#FFF");
-        plotLine([5,-7,6,-6],"#FFF");
-
-        drawRightBody();
-
-        drawRightShoe(1,6);
-        plotLine([-4,6,-1,6],"#00F");
-
-        drawEye(DIR_RIGHT,-4,-4);
-        drawEye(DIR_RIGHT,2,-4);
-    };
-
-    var drawRight1 = function() {
-        // antenna tips
-        plotLine([-1,-7,0,-7],"#FFF");
-        plotLine([5,-7,6,-7],"#FFF");
-
-        drawRightBody();
-
-        drawRightShoe(-4,6);
-        plotLine([2,6,5,6],"#00F");
-
-        drawEye(DIR_RIGHT,-4,-4);
-        drawEye(DIR_RIGHT,2,-4);
-    };
-
-    var drawLeft0 = function() {
-        ctx.scale(-1,1);
-        ctx.translate(1,0);
-        drawRight0();
-    };
-    
-    var drawLeft1 = function() {
-        ctx.scale(-1,1);
-        ctx.translate(1,0);
-        drawRight1();
-    };
-
-    var drawUpDownBody0 = function() {
-        plotLine([-6,-7,-7,-6],"#FFF");
-        plotLine([5,-7,6,-6],"#FFF");
-        plotSolid([
-            -7,-3,
-            -4,-6,
-            -5,-7,
-            -6,-7,
-            -4,-7,
-            -3,-6,
-            -2,-6,
-            -1,-5,
-            0,-5,
-            1,-6,
-            2,-6,
-            3,-7,
-            5,-7,
-            4,-7,
-            3,-6,
-            6,-3,
-            6,1,
-            5,3,
-            4,5,
-            3,6,
-            -4,6,
-            -5,5,
-            -6,3,
-            -7,1,
-        ],color);
-    };
-
-    var drawUpDownBody1 = function() {
-        plotLine([-6,-6,-7,-5],"#FFF");
-        plotLine([5,-6,6,-5],"#FFF");
-        plotSolid([
-            -7,-3,
-            -4,-6,
-            -5,-7,
-            -6,-6,
-            -5,-7,
-            -4,-7,
-            -3,-6,
-            -2,-6,
-            -1,-5,
-            0,-5,
-            1,-6,
-            2,-6,
-            3,-7,
-            4,-7,
-            5,-6,
-            4,-7,
-            3,-6,
-            6,-3,
-            6,1,
-            5,3,
-            4,5,
-            3,6,
-            -4,6,
-            -5,5,
-            -6,3,
-            -7,1,
-        ],color);
-    };
-
-    var drawUp0 = function() {
-        drawUpDownBody0();
-        drawEye(DIR_UP,-5,-5);
-        drawEye(DIR_UP,1,-5);
-        plotSolid([
-            -4,6,
-            -3,5,
-            -2,5,
-            -1,6,
-        ],"#00F");
-    };
-
-    var drawUp1 = function() {
-        drawUpDownBody1();
-        drawEye(DIR_UP,-5,-5);
-        drawEye(DIR_UP,1,-5);
-        plotSolid([
-            0,6,
-            1,5,
-            2,5,
-            3,6,
-        ],"#00F");
-    };
-
-    var drawDown0 = function() {
-        drawUpDownBody0();
-        drawEye(DIR_DOWN,-5,-4);
-        drawEye(DIR_DOWN,1,-4);
-        plotSolid([
-            0,6,
-            1,4,
-            2,3,
-            3,3,
-            4,4,
-            4,5,
-            3,6,
-        ],"#00F");
-        plotLine([-4,6,-2,6],"#00F");
-    };
-
-    var drawDown1 = function() {
-        drawUpDownBody1();
-        drawEye(DIR_DOWN,-5,-4);
-        drawEye(DIR_DOWN,1,-4);
-        plotSolid([
-            -1,6,
-            -2,4,
-            -3,3,
-            -4,3,
-            -5,4,
-            -5,5,
-            -4,6,
-        ],"#00F");
-        plotLine([1,6,3,6],"#00F");
-    };
-
-    var borderColor;
-    var faceColor;
-
-    var drawScaredBody = function() {
-        plotOutline([
-            -6,-2,
-            -2,-5,
-            -3,-6,
-            -5,-6,
-            -3,-6,
-            -1,-4,
-            1,-4,
-            3,-6,
-            5,-6,
-            3,-6,
-            2,-5,
-            6,-2,
-            6,4,
-            5,6,
-            4,7,
-            -4,7,
-            -5,6,
-            -6,4
-        ],borderColor);
-
-        plotLine([
-            -2,4,
-            -1,3,
-            1,3,
-            2,4
-        ],faceColor);
-    };
-
-
-    var drawScared0 = function(flash) {
-        plotLine([-2,-2,-2,0],faceColor);
-        plotLine([-3,-1,-1,-1],faceColor);
-        plotLine([2,-2,2,0],faceColor);
-        plotLine([3,-1,1,-1],faceColor);
-        plotLine([-5,-6,-6,-7],"#FFF");
-        plotLine([5,-6,6,-7],"#FFF");
-        drawScaredBody();
-    };
-
-    var drawScared1 = function(flash) {
-        plotLine([-3,-2,-1,0],faceColor);
-        plotLine([-3,0,-1,-2],faceColor);
-        plotLine([1,-2,3,0],faceColor);
-        plotLine([1,0,3,-2],faceColor);
-        plotLine([-5,-6,-6,-5],"#FFF");
-        plotLine([5,-6,6,-5],"#FFF");
-        drawScaredBody();
-    };
-
-    return function(_ctx,x,y,frame,dirEnum,scared,flash,eyes_only,_color) {
-        if (eyes_only) {
-            return; // invisible
-        }
-
-        ctx = _ctx;
-        color = _color;
-
-        ctx.save();
-        ctx.translate(x+0.5,y+0.5);
-
-        if (scared) {
-            ctx.translate(0,-1); // correct alignment error from my chosen coordinates
-            borderColor = flash ? "#FFF" : "#00F";
-            faceColor = flash ? "#F00" : "#FF0";
-            [drawScared0, drawScared1][frame]();
-        }
-        else if (dirEnum == DIR_RIGHT) {
-            [drawRight0, drawRight1][frame]();
-        }
-        else if (dirEnum == DIR_LEFT) {
-            [drawLeft0, drawLeft1][frame]();
-        }
-        else if (dirEnum == DIR_DOWN) {
-            [drawDown0, drawDown1][frame]();
-        }
-        else if (dirEnum == DIR_UP) {
-            [drawUp0, drawUp1][frame]();
-        }
-
-        ctx.restore();
-    };
-})();
-
-var drawColoredOttoSprite = function(color,eyeColor) {
-    var ctx;
-
-    var plotLine = function(points,color) {
-        var len = points.length;
-        var i;
-        ctx.beginPath();
-        ctx.moveTo(points[0],points[1]);
-        for (i=2; i<len; i+=2) {
-            ctx.lineTo(points[i],points[i+1]);
-        }
-        ctx.lineWidth = 1.0;
-        ctx.lineCap = ctx.lineJoin = "round";
-        ctx.strokeStyle = color;
-        ctx.stroke();
-    };
-
-    var plotSolid = function(points,color) {
-        var len = points.length;
-        var i;
-        ctx.beginPath();
-        ctx.moveTo(points[0],points[1]);
-        for (i=2; i<len; i+=2) {
-            ctx.lineTo(points[i],points[i+1]);
-        }
-        ctx.closePath();
-        ctx.lineWidth = 1.0;
-        ctx.lineJoin = "round";
-        ctx.fillStyle = ctx.strokeStyle = color;
-        ctx.fill();
-        ctx.stroke();
-    };
-
-    var drawRightEye = function() {
-        plotSolid([
-            -4,-5,
-            -3,-6,
-            -2,-6,
-            -2,-5,
-            -3,-4,
-            -4,-4,
-        ],eyeColor);
-    };
-
-    var drawRight0 = function() {
-        plotSolid([
-            -5,-4,
-            -3,-6,
-            2,-6,
-            3,-5,
-            -1,-3,
-            3,-1,
-            1,1,
-            1,3,
-            3,6,
-            5,4,
-            6,4,
-            6,5,
-            4,7,
-            2,7,
-            -1,1,
-            -4,4,
-            -3,6,
-            -3,7,
-            -4,7,
-            -6,5,
-            -6,4,
-            -3,1,
-            -5,-1,
-        ],color);
-        drawRightEye();
-    };
-    var drawRight1 = function() {
-        plotSolid([
-            -5,-4,
-            -3,-6,
-            1,-6,
-            3,-4,
-            3,-1,
-            1,1,
-            1,6,
-            4,6,
-            4,7,
-            0,7,
-            0,1,
-            -2,1,
-            -4,3,
-            -4,4,
-            -3,5,
-            -3,6,
-            -4,6,
-            -5,4,
-            -5,3,
-            -3,1,
-            -5,-1,
-        ],color);
-        drawRightEye();
-    };
-    var drawRight2 = function() {
-        plotSolid([
-            -5,-4,
-            -3,-6,
-            2,-6,
-            3,-5,
-            -1,-3,
-            3,-1,
-            1,1,
-            1,3,
-            4,3,
-            4,4,
-            0,4,
-            0,1,
-            -2,1,
-            -2,6,
-            1,6,
-            1,7,
-            -3,7,
-            -3,1,
-            -5,-1,
-        ],color);
-        drawRightEye();
-    };
-    var drawRight3 = function() {
-        plotSolid([
-            -5,-4,
-            -3,-6,
-            2,-6,
-            -2,-3,
-            2,0,
-            1,1,
-            3,5,
-            5,3,
-            6,3,
-            6,4,
-            4,6,
-            2,6,
-            -1,1,
-            -3,1,
-            -3,6,
-            0,6,
-            0,7,
-            -4,7,
-            -4,2,
-            -3,1,
-            -5,-1,
-        ],color);
-        drawRightEye();
-    };
-
-    var drawUpDownEyes = function() {
-        plotSolid([
-            -5,-5,
-            -4,-6,
-            -3,-6,
-            -3,-5,
-            -4,-4,
-            -5,-4,
-        ],eyeColor);
-        plotSolid([
-            3,-6,
-            4,-6,
-            5,-5,
-            5,-4,
-            4,-4,
-            3,-5,
-        ],eyeColor);
-    };
-
-    var drawUpDownHead = function() {
-        plotSolid([
-            -4,-4,
-            -2,-6,
-            2,-6,
-            4,-4,
-            4,-1,
-            2,1,
-            -2,1,
-            -4,-1,
-        ],color);
-    };
-
-    var drawUpDownLeg0 = function(y,xs) {
-        ctx.save();
-        ctx.translate(0,y);
-        ctx.scale(xs,1);
-
-        plotSolid([
-            1,0,
-            2,0,
-            2,6,
-            4,6,
-            4,7,
-            1,7,
-        ],color);
-
-        ctx.restore();
-    };
-
-    var drawUpDownLeg1 = function(y,xs) {
-        ctx.save();
-        ctx.translate(0,y);
-        ctx.scale(xs,1);
-
-        plotSolid([
-            1,0,
-            2,0,
-            2,4,
-            3,5,
-            4,4,
-            5,4,
-            5,5,
-            3,7,
-            2,7,
-            1,6,
-        ],color);
-
-        ctx.restore();
-    };
-    var drawUpDownLegs0 = function() {
-        drawUpDownLeg0(0,-1);
-        drawUpDownLeg1(-2,1);
-    };
-
-    var drawUpDownLegs1 = function() {
-        drawUpDownLeg0(-2,-1);
-        drawUpDownLeg1(-2,1);
-    };
-
-    var drawUpDownLegs2 = function() {
-        drawUpDownLeg1(-2,-1);
-        drawUpDownLeg0(0,1);
-    };
-
-    var drawUpDownLegs3 = function() {
-        drawUpDownLeg1(0,-1);
-        drawUpDownLeg0(0,1);
-    };
-
-    var drawDown0 = function() {
-        drawUpDownHead();
-        drawUpDownEyes();
-        drawUpDownLegs0();
-        plotLine([-2,-3,2,-3],"#000");
-    };
-    var drawDown1 = function() {
-        drawUpDownHead();
-        drawUpDownEyes();
-        drawUpDownLegs1();
-    };
-    var drawDown2 = function() {
-        drawUpDownHead();
-        drawUpDownEyes();
-        drawUpDownLegs2();
-        plotLine([-2,-3,2,-3],"#000");
-    };
-    var drawDown3 = function() {
-        drawUpDownHead();
-        drawUpDownEyes();
-        drawUpDownLegs3();
-        plotSolid([
-            -2,-3,
-            0,-5,
-            2,-3,
-            0,-1,
-        ],"#000");
-    };
-
-    var drawUp0 = function() {
-        drawUpDownEyes();
-        drawUpDownHead();
-        drawUpDownLegs0();
-    };
-    var drawUp1 = function() {
-        drawUpDownEyes();
-        drawUpDownHead();
-        drawUpDownLegs1();
-    };
-    var drawUp2 = function() {
-        drawUpDownEyes();
-        drawUpDownHead();
-        drawUpDownLegs2();
-    };
-    var drawUp3 = function() {
-        drawUpDownEyes();
-        drawUpDownHead();
-        drawUpDownLegs3();
-    };
-
-    return function(_ctx,x,y,dirEnum,frame,rotate) {
-        ctx = _ctx;
-
-        ctx.save();
-        ctx.translate(x+0.5,y+0.5);
-        if (rotate) {
-            ctx.rotate(rotate);
-        }
-
-        if (dirEnum == DIR_RIGHT) {
-            ctx.translate(0,-1); // correct my coordinate system
-            [drawRight0, drawRight1, drawRight2, drawRight3][frame]();
-        }
-        else if (dirEnum == DIR_LEFT) {
-            ctx.translate(0,-1); // correct my coordinate system
-            ctx.scale(-1,1);
-            [drawRight0, drawRight1, drawRight2, drawRight3][frame]();
-        }
-        else if (dirEnum == DIR_DOWN) {
-            ctx.translate(0,-1); // correct my coordinate system
-            [drawDown0, drawDown1, drawDown2, drawDown3][frame]();
-        }
-        else if (dirEnum == DIR_UP) {
-            ctx.translate(0,-1); // correct my coordinate system
-            [drawUp0, drawUp1, drawUp2, drawUp3][frame]();
-        }
-
-        ctx.restore();
-    };
-};
-
-var drawOttoSprite = drawColoredOttoSprite("#FF0","#00F");
-var drawMsOttoSprite = drawColoredOttoSprite("#F00","#FFF");
-
-var drawDeadOttoSprite = function(ctx,x,y) {
-    var plotOutline = function(points,color) {
-        var len = points.length;
-        var i;
-        ctx.beginPath();
-        ctx.moveTo(points[0],points[1]);
-        for (i=2; i<len; i+=2) {
-            ctx.lineTo(points[i],points[i+1]);
-        }
-        ctx.closePath();
-        ctx.lineWidth = 1.0;
-        ctx.lineCap = ctx.lineJoin = "round";
-        ctx.strokeStyle = color;
-        ctx.stroke();
-    };
-    ctx.save();
-    ctx.translate(x+2,y);
-    plotOutline([
-        3,-5,
-        -1,-5,
-        -2,-6,
-        -2,-7,
-        -1,-8,
-        3,-8,
-        4,-7,
-        4,-6,
-    ],"#F00");
-    ctx.restore();
-    drawOttoSprite(ctx,x,y,DIR_LEFT,2,Math.PI/2);
-};
-
-// draw cloud body
-var drawCloudSprite = function(ctx,x,y,dirEnum,angle,mouthShift,scale,centerShift,alpha,color,rot_angle) {
-
-    var addCloud = function(ctx) {
-        ctx.save();
-		color = '#000';
-		// ctx.scale(10,10);
-		ctx.beginPath();
-		ctx.arc(-2,1,1.5,0,2*Math.PI);
-		ctx.closePath();
-		ctx.strokeStyle = color;
-		ctx.stroke();
-		ctx.fillStyle = color;
-		ctx.fill();
-		ctx.beginPath();
-		ctx.arc(0,0,2,0,2*Math.PI);
-		ctx.closePath();
-		ctx.strokeStyle = color;
-		ctx.stroke();
-		ctx.fillStyle = color;
-		ctx.fill();
-		ctx.beginPath();
-		ctx.arc(2,0,1,0,2*Math.PI);
-		ctx.closePath();
-		ctx.strokeStyle = color;
-		ctx.stroke();
-		ctx.fillStyle = color;
-		ctx.fill();
-		ctx.beginPath();
-		ctx.arc(3,0,1,0,2*Math.PI);
-		ctx.closePath();
-		ctx.strokeStyle = color;
-		ctx.stroke();
-		ctx.fillStyle = color;
-		ctx.fill();
-		ctx.beginPath();
-		ctx.arc(4.5,1.5,1,0,2*Math.PI);
-		ctx.closePath();
-		ctx.strokeStyle = color;
-		ctx.stroke();
-		ctx.fillStyle = color;
-		ctx.fill();
-		ctx.beginPath();
-		ctx.rect(-1,1.25,4.5,1.25);
-		ctx.closePath();
-		ctx.strokeStyle = color;
-		ctx.stroke();
-		ctx.fillStyle = color;
-		ctx.fill();
-		ctx.restore();
-    };
-
-    if (mouthShift == undefined) mouthShift = 0;
-    if (centerShift == undefined) centerShift = 0;
-    if (scale == undefined) scale = 1;
-    if (alpha == undefined) alpha = 1;
-
-    if (color == undefined) {
-        color = "rgba(255,255,0," + alpha + ")";
-    }
-
-    ctx.save();
-    ctx.translate(x,y);
-    ctx.scale(scale,scale);
-    if (rot_angle) {
-        ctx.rotate(rot_angle);
-    }
-
-    // rotate to current heading direction
-    var d90 = Math.PI/2;
-    if (dirEnum == DIR_UP) ctx.rotate(3*d90);
-    else if (dirEnum == DIR_RIGHT) ctx.rotate(0);
-    else if (dirEnum == DIR_DOWN) ctx.rotate(d90);
-    else if (dirEnum == DIR_LEFT) ctx.rotate(2*d90);
-
-    // plant corner of mouth
-    ctx.beginPath();
-    ctx.moveTo(-3+mouthShift,0);
-
-    // draw head outline
-    // ctx.arc(centerShift,0,6.5,angle,2*Math.PI-angle);
-    ctx.arc(centerShift,0,6.5,0,2*Math.PI);
-    ctx.closePath();
-
-    ctx.strokeStyle = color;
-    ctx.stroke();
-    ctx.fillStyle = color;
-    ctx.fill();
-
-    ctx.restore();
-
-    ctx.save();
-    ctx.translate(x-0.75,y-0.25);
-    ctx.scale(scale,scale);
-    addCloud(ctx);
-    ctx.restore();
-
-};
-
-// draw giant cloud body
-var drawGiantcloudSprite = function(ctx,x,y,dirEnum,frame) {
-
-    var color = "#FF0";
-    var mouthShift = 0;
-    var angle = 0;
-    if (frame == 1) {
-        mouthShift = -4;
-        angle = Math.atan(7/14);
-    }
-    else if (frame == 2) {
-        mouthShift = -2;
-        angle = Math.atan(13/9);
-    }
-
-    ctx.save();
-    ctx.translate(x,y);
-
-    // rotate to current heading direction
-    var d90 = Math.PI/2;
-    if (dirEnum == DIR_UP) ctx.rotate(3*d90);
-    else if (dirEnum == DIR_RIGHT) ctx.rotate(0);
-    else if (dirEnum == DIR_DOWN) ctx.rotate(d90);
-    else if (dirEnum == DIR_LEFT) ctx.rotate(2*d90);
-
-    // plant corner of mouth
-    ctx.beginPath();
-    ctx.moveTo(mouthShift,0);
-
-    // draw head outline
-    ctx.arc(0,0,16,angle,2*Math.PI-angle);
-    ctx.closePath();
-
-    ctx.fillStyle = color;
-    ctx.fill();
-
-    ctx.restore();
-};
-
-var drawMscloudSprite = function(ctx,x,y,dirEnum,frame,rot_angle) {
-    var angle = 0;
-
-    // draw body
-    if (frame == 0) {
-        // closed
-        drawCloudSprite(ctx,x,y,dirEnum,0,undefined,undefined,undefined,undefined,undefined,rot_angle);
-    }
-    else if (frame == 1) {
-        // open
-        angle = Math.atan(4/5);
-        drawCloudSprite(ctx,x,y,dirEnum,angle,undefined,undefined,undefined,undefined,undefined,rot_angle);
-        angle = Math.atan(4/8); // angle for drawing eye
-    }
-    else if (frame == 2) {
-        // wide
-        angle = Math.atan(6/3);
-        drawCloudSprite(ctx,x,y,dirEnum,angle,undefined,undefined,undefined,undefined,undefined,rot_angle);
-        angle = Math.atan(6/6); // angle for drawing eye
-    }
-
-    ctx.save();
-    ctx.translate(x,y);
-    if (rot_angle) {
-        ctx.rotate(rot_angle);
-    }
-
-    // reflect or rotate sprite according to current direction
-    var d90 = Math.PI/2;
-    if (dirEnum == DIR_UP)
-        ctx.rotate(-d90);
-    else if (dirEnum == DIR_DOWN)
-        ctx.rotate(d90);
-    else if (dirEnum == DIR_LEFT)
-        ctx.scale(-1,1);
-
-    // bow
-    var x=-7.5,y=-7.5;
-    ctx.fillStyle = "#F00";
-    ctx.beginPath(); ctx.arc(x+1,y+4,1.25,0,Math.PI*2); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.arc(x+2,y+5,1.25,0,Math.PI*2); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.arc(x+3,y+3,1.25,0,Math.PI*2); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.arc(x+4,y+1,1.25,0,Math.PI*2); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.arc(x+5,y+2,1.25,0,Math.PI*2); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = "#0031FF";
-    ctx.beginPath(); ctx.arc(x+2.5,y+3.5,0.5,0,Math.PI*2); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.arc(x+3.5,y+2.5,0.5,0,Math.PI*2); ctx.closePath(); ctx.fill();
-
-    // lips
-    ctx.strokeStyle = "#F00";
-    ctx.lineWidth = 1.25;
-    ctx.lineCap = "round";
-    ctx.beginPath();
-    if (frame == 0) {
-        ctx.moveTo(5,0);
-        ctx.lineTo(6.5,0);
-        ctx.moveTo(6.5,-1.5);
-        ctx.lineTo(6.5,1.5);
-    }
-    else {
-        var r1 = 7.5;
-        var r2 = 8.5;
-        var c = Math.cos(angle);
-        var s = Math.sin(angle);
-        ctx.moveTo(-3+r1*c,r1*s);
-        ctx.lineTo(-3+r2*c,r2*s);
-        ctx.moveTo(-3+r1*c,-r1*s);
-        ctx.lineTo(-3+r2*c,-r2*s);
-    }
-    ctx.stroke();
-
-    // mole
-    ctx.beginPath();
-    ctx.arc(-3,2,0.5,0,Math.PI*2);
-    ctx.fillStyle = "#000";
-    ctx.fill();
-
-    // eye
-    ctx.strokeStyle = "#000";
-    ctx.lineCap = "round";
-    ctx.beginPath();
-    if (frame == 0) {
-        ctx.moveTo(-2.5,-2);
-        ctx.lineTo(-0.5,-2);
-    }
-    else {
-        var r1 = 0.5;
-        var r2 = 2.5;
-        var c = Math.cos(angle);
-        var s = Math.sin(angle);
-        ctx.moveTo(-3+r1*c,-2-r1*s);
-        ctx.lineTo(-3+r2*c,-2-r2*s);
-    }
-    ctx.stroke();
-
-    ctx.restore();
-};
-
-var drawCookiemanSprite = (function(){
-
-    // TODO: draw pupils separately in atlas
-    //      composite the body frame and a random pupil frame when drawing cookie-man
-
-    var prevFrame = undefined;
-    var sx1 = 0; // shift x for first pupil
-    var sy1 = 0; // shift y for first pupil
-    var sx2 = 0; // shift x for second pupil
-    var sy2 = 0; // shift y for second pupil
-
-    var er = 2.1; // eye radius
-    var pr = 1; // pupil radius
-
-    var movePupils = function() {
-        var a1 = Math.random()*Math.PI*2;
-        var a2 = Math.random()*Math.PI*2;
-        var r1 = Math.random()*pr;
-        var r2 = Math.random()*pr;
-
-        sx1 = Math.cos(a1)*r1;
-        sy1 = Math.sin(a1)*r1;
-        sx2 = Math.cos(a2)*r2;
-        sy2 = Math.sin(a2)*r2;
-    };
-
-    return function(ctx,x,y,dirEnum,frame,shake,rot_angle) {
-        var angle = 0;
-
-        // draw body
-        var draw = function(angle) {
-            //angle = Math.PI/6*frame;
-            drawCloudSprite(ctx,x,y,dirEnum,angle,undefined,undefined,undefined,undefined,"#47b8ff",rot_angle);
-        };
-        if (frame == 0) {
-            // closed
-            draw(0);
-        }
-        else if (frame == 1) {
-            // open
-            angle = Math.atan(4/5);
-            draw(angle);
-            angle = Math.atan(4/8); // angle for drawing eye
-        }
-        else if (frame == 2) {
-            // wide
-            angle = Math.atan(6/3);
-            draw(angle);
-            angle = Math.atan(6/6); // angle for drawing eye
-        }
-
-        ctx.save();
-        ctx.translate(x,y);
-        if (rot_angle) {
-            ctx.rotate(rot_angle);
-        }
-
-        // reflect or rotate sprite according to current direction
-        var d90 = Math.PI/2;
-        if (dirEnum == DIR_UP)
-            ctx.rotate(-d90);
-        else if (dirEnum == DIR_DOWN)
-            ctx.rotate(d90);
-        else if (dirEnum == DIR_LEFT)
-            ctx.scale(-1,1);
-
-        var x = -4; // pivot point
-        var y = -3.5;
-        var r1 = 3;   // distance from pivot of first eye
-        var r2 = 6; // distance from pivot of second eye
-        angle /= 3; // angle from pivot point
-        angle += Math.PI/8;
-        var c = Math.cos(angle);
-        var s = Math.sin(angle);
-
-        if (shake) {
-            if (frame != prevFrame) {
-                movePupils();
-            }
-            prevFrame = frame;
-        }
-
-        // second eyeball
-        ctx.beginPath();
-        ctx.arc(x+r2*c, y-r2*s, er, 0, Math.PI*2);
-        ctx.fillStyle = "#FFF";
-        ctx.fill();
-        // second pupil
-        ctx.beginPath();
-        ctx.arc(x+r2*c+sx2, y-r2*s+sy2, pr, 0, Math.PI*2);
-        ctx.fillStyle = "#000";
-        ctx.fill();
-
-        // first eyeball
-        ctx.beginPath();
-        ctx.arc(x+r1*c, y-r1*s, er, 0, Math.PI*2);
-        ctx.fillStyle = "#FFF";
-        ctx.fill();
-        // first pupil
-        ctx.beginPath();
-        ctx.arc(x+r1*c+sx1, y-r1*s+sy1, pr, 0, Math.PI*2);
-        ctx.fillStyle = "#000";
-        ctx.fill();
-
-        ctx.restore();
-
-    };
-})();
-
-////////////////////////////////////////////////////////////////////
-// SERVICE SPRITES
-
-var drawCompute = function(ctx,x,y,color) {
-
-    ctx.save();
-    ctx.translate(x-7,y-7);
-	
-	ctx.beginPath();
-	ctx.lineWidth = 1;
-	ctx.rect(0,0,14,14);
-	ctx.rect(2,2,2,2);
-	ctx.rect(6,2,2,2);
-	ctx.rect(10,2,2,2);
-	ctx.rect(2,6,2,2);
-	ctx.rect(6,6,2,2);
-	ctx.rect(10,6,2,2);
-	ctx.rect(2,10,10,2);
-    ctx.strokeStyle = color;
-    ctx.stroke();
-
-    ctx.restore();
-};
-
-var drawCompute1 = function(ctx,x,y) {
-    drawCompute(ctx,x,y,'#FFF');
-}
-
-var drawCompute2 = function(ctx,x,y) {
-    drawCompute(ctx,x,y,'#f54242');
-}
-
-var drawCompute3 = function(ctx,x,y) {
-    drawCompute(ctx,x,y,'#f5a142');
-}
-
-var drawCompute4 = function(ctx,x,y) {
-    drawCompute(ctx,x,y,'#f5ef42');
-}
-
-var drawCompute5 = function(ctx,x,y) {
-    drawCompute(ctx,x,y,'#81f542');
-}
-
-var drawCompute6 = function(ctx,x,y) {
-    drawCompute(ctx,x,y,'#42f584');
-}
-
-var drawCompute7 = function(ctx,x,y) {
-    drawCompute(ctx,x,y,'#42ecf5');
-}
-
-var drawCompute8 = function(ctx,x,y) {
-    drawCompute(ctx,x,y,'#4278f5');
-}
-
-var drawCompute9 = function(ctx,x,y) {
-    drawCompute(ctx,x,y,'#8d42f5');
-}
-
-var drawCompute10 = function(ctx,x,y) {
-    drawCompute(ctx,x,y,'#f542f2');
-}
-
-var drawCompute11 = function(ctx,x,y) {
-    drawCompute(ctx,x,y,'#f5429e');
-}
-
-var drawCompute12 = function(ctx,x,y) {
-    drawCompute(ctx,x,y,'#f54242');
-}
-
-var getSpriteFuncFromServiceName = function(name) {
-    var funcs = {
-        'compute1': drawCompute1,
-        'compute2': drawCompute2,
-        'compute3': drawCompute3,
-        'compute4': drawCompute4,
-        'compute5': drawCompute5,
-        'compute6': drawCompute6,
-        'compute7': drawCompute7,
-        'compute8': drawCompute8,
-        'compute9': drawCompute9,
-        'compute10': drawCompute10,
-        'compute11': drawCompute11,
-        'compute12': drawCompute12,
-    };
-
-    return funcs[name];
-};
-
 var drawRecordSymbol = function(ctx,x,y,color) {
     ctx.save();
     ctx.fillStyle = color;
@@ -6518,9 +5240,10 @@ var drawExclamationPoint = function(ctx,x,y) {
 
     ctx.restore();
 };
+
 //@line 1 "src/Actor.js"
 //////////////////////////////////////////////////////////////////////////////////////
-// The actor class defines common data functions for the ghosts and cloud
+// The actor class defines common data functions for the coins and cloud
 // It provides everything for updating position and direction.
 
 // "Coin" and "Player" inherit from this "Actor"
@@ -8554,7 +7277,7 @@ var homeState = (function(){
             exitTo(preNewGameState);
         },
         function(ctx,x,y,frame) {
-            drawCloudSprite(ctx,x,y,DIR_RIGHT,getIconAnimFrame(frame), true);
+            atlas.drawCloudSprite(ctx,x,y,DIR_RIGHT,getIconAnimFrame(frame), true);
         });
     menu.addTextButton("SCORES",
         function() { 
@@ -8891,7 +7614,7 @@ var preNewGameState = (function() {
             practiceMode = false;
             turboMode = false;
             // instance_id = window.name + ":" + Date.now();
-	    console.log(instance_id);
+        console.log(instance_id);
             newGameState.setStartLevel(1);
             exitTo(newGameState, 60);
         });
@@ -9246,14 +7969,20 @@ var scoreBoardState = (function() {
         var y = 12*tileSize;
         var i;
         for (i=0; i< num_score_list; i++) {
+	    // without date
+            // ctx.textAlign = "left";
+            // ctx.fillText(score_list[i].user_id,3*tileSize,y+i*2*tileSize);
+            // ctx.textAlign = "right";
+            // ctx.fillText(score_list[i].score,25*tileSize,y+i*2*tileSize);
+	    // with date
             ctx.textAlign = "left";
             ctx.fillText(score_list[i].user_id,2*tileSize,y+i*2*tileSize);
             ctx.textAlign = "right";
             ctx.fillText(score_list[i].score,15*tileSize,y+i*2*tileSize);
-            ctx.textAlign = "left";
             date = new Date(score_list[i].updated_on);
-            // date_str = date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear()
+            date_str = date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear()
             date_str = date.toLocaleDateString("en-AU")
+            ctx.textAlign = "left";
             ctx.fillText(date_str,16*tileSize,y+i*2*tileSize);
         }
         if (num_score_list == 0) {
@@ -9266,7 +7995,7 @@ var scoreBoardState = (function() {
         init: function() {
             menu.enable();
             gameTitleState.init();
-	    axios.get(SCORE_BASE_URL+'?game_id=1')
+        axios.get(SCORE_BASE_URL+'?game_id=1')
               .then(scoreres => {
                 console.log(scoreres);
                 score_list = scoreres.data.items;
@@ -9956,14 +8685,14 @@ var overState = (function() {
         init: function() {
             frames = 0;
             addEvent({ "game_id": 1+gameMode, "instance_id": instance_id, "user_id": window.name, "score": getScore(), "level": level, "state" : "GAME_OVER" });
-	    axios.post(SCORE_BASE_URL,{ "game_id": 1+gameMode, "user_id": window.name, "score": getScore() })
+        axios.post(SCORE_BASE_URL,{ "game_id": 1+gameMode, "user_id": window.name, "score": getScore() })
               .then(scoreres => {
                 console.log(scoreres);
               })
               .catch(err => {
                 console.log(err);
               })
-	    axios.post(CRM_BASE_URL,{ "name" : window.fullname, "notes" : "{ \"timestamp\" : \""+Date.now().toString()+"\", \"game_id\": "+(1+gameMode)+", \"user_id\": \""+(window.name)+"\", \"score\": "+getScore()+" }" })
+        axios.post(CRM_BASE_URL,{ "name" : window.fullname, "notes" : "{ \"timestamp\" : \""+Date.now().toString()+"\", \"game_id\": "+(1+gameMode)+", \"user_id\": \""+(window.name)+"\", \"score\": "+getScore()+" }" })
               .then(crmres => {
                 console.log(crmres);
               })
@@ -10004,7 +8733,7 @@ async function getInstanceId() {
     .then(idres => {
         id = idres.data.id;
         console.log(id);
-	instance_id = window.name + ":" + id.toString().padStart(13,'0');
+    instance_id = window.name + ":" + id.toString().padStart(13,'0');
         // instance_id = window.name + ":" + Date.now().toString().padStart(13,'0');
     })
     .catch(err => {
@@ -10858,20 +9587,25 @@ var vcr = (function() {
 // Entry Point
 
 window.addEventListener("load", function() {
-    loadHighScores();
-    initRenderer();
-    atlas.create();
-    initSwipe();
-	var anchor = window.location.hash.substring(1);
-	if (anchor == "learn") {
-		switchState(learnState);
-	}
-	else {
-		switchState(homeState);
-	}
-    executive.init();
-    if (window.name == null | window.name.length == 0) {
-        window.location.href = "index.htm";
+    if (window.location.href.includes("atlas.htm")) {
+        atlas.print();
+    } else {
+        loadHighScores();
+        initRenderer();
+        atlas.create();
+        initSwipe();
+        var anchor = window.location.hash.substring(1);
+        if (anchor == "learn") {
+            switchState(learnState);
+        }
+        else {
+            switchState(homeState);
+        }
+        executive.init();
+        if (window.name == null | window.name.length == 0) {
+            window.location.href = "index.htm";
+        }
     }
 });
 })();
+
