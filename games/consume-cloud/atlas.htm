@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>OCI Arcade Atlas Generator</title>
+    <!-- last updated: Sun May 19 21:43:14 PDT 2019 -->
+    <!-- Lock viewport on mobile devices. -->
+    <!--
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+
+    -->
+    <style>
+        body {
+            margin:0;
+            background: #000;
+            height: 100%; overflow: hidden;
+        }
+        #canvas-warning {
+            color: #FF0;
+            font-size: 1.5em;
+        }
+    </style>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="api_hostname.js"></script>
+    <script src="consume-cloud.js"></script>
+</head>
+
+<body>
+    <canvas id="atlas"><div id="canvas-warning">Your browser does not support HTML Canvas.  Please upgrade!</div></canvas>
+</body>
+
+</html>
