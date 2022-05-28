@@ -2367,12 +2367,12 @@ var atlas = (function(){
 
     var drawGrid = function() {
         // draw grid overlay
-        var canvas = document.getElementById('gridcanvas');
+        var canvas = document.getElementById('grid');
         if (!canvas) {
             return;
         }
-        var w = size*cols*renderScale;
-        var h = size*rows*renderScale;
+        var w = 2000;
+        var h = 4000;
         canvas.width = w;
         canvas.height = h;
         var ctx = canvas.getContext('2d');
@@ -2392,10 +2392,16 @@ var atlas = (function(){
         ctx.lineCap = "square";
         ctx.strokeStyle="rgba(255,255,255,0.5)";
         ctx.stroke();
+
+	var dataURL = canvas.toDataURL("image/png", 1.0);
+	var a = document.createElement('a');
+        a.href = dataURL;
+        a.download = 'grid.png';
+        document.body.appendChild(a);
+        a.click();
     };
 
     var print= function() {
-        drawGrid();
         canvas = document.getElementById('atlas');
         ctx = canvas.getContext("2d");
 
@@ -2413,6 +2419,21 @@ var atlas = (function(){
         ctx.clearRect(0,0,w,h);
         ctx.scale(5,5);
 		 
+        step = size;
+        ctx.beginPath();
+        for (x=0; x<=w; x+=step) {
+            ctx.moveTo(x,0);
+            ctx.lineTo(x,h);
+        }
+        for (y=0; y<=h; y+=step) {
+            ctx.moveTo(0,y);
+            ctx.lineTo(w,y);
+        }
+        ctx.lineWidth = "1px";
+        ctx.lineCap = "square";
+        ctx.strokeStyle="rgba(255,255,255,0.5)";
+        ctx.stroke();
+
         var drawAtCell = function(f,row,col) {
             var x = col*size + size/2;
             var y = row*size + size/2;
@@ -2558,15 +2579,15 @@ var atlas = (function(){
     };
 
     var copyCellTo = function(row, col, destCtx, x, y,display) {
-        var sx = col*size*renderScale;
-        var sy = row*size*renderScale;
-        var sw = renderScale*size;
-        var sh = renderScale*size;
+        var sx = (col*size+1)*renderScale;
+        var sy = (row*size+1)*renderScale;
+        var sw = renderScale*(size-2);
+        var sh = renderScale*(size-2);
 
-        var dx = x - size/2;
-        var dy = y - size/2;
-        var dw = size;
-        var dh = size;
+        var dx = x - size/2+1;
+        var dy = y - size/2+1;
+        var dw = size-2;
+        var dh = size-2;
 
         if (display) {
             console.log(sx,sy,sw,sh,dw,dy,dw,dh);
@@ -2678,6 +2699,7 @@ var atlas = (function(){
     };
 
     return {
+        grid: drawGrid,
         print: print,
         create: create,
         getCanvas: function() { return canvas; },
@@ -9589,6 +9611,7 @@ var vcr = (function() {
 window.addEventListener("load", function() {
     if (window.location.href.includes("atlas.htm")) {
         atlas.print();
+        atlas.grid();
     } else {
         loadHighScores();
         initRenderer();
